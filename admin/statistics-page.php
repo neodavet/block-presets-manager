@@ -2,13 +2,26 @@
 /**
  * Admin Statistics Page Template
  *
+ * This template is always `include`d from GBP_Admin::statistics_page(), so its
+ * top-level variables are local to that method call at runtime, not real globals.
+ * phpcs analyzes included template files statically and cannot see that, hence the
+ * blanket disable below for the "unprefixed global" sniff.
+ *
  * @package Gutenberg_Blocks_Presets
  * @since 1.0.0
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 // Prevent direct access
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// Defense-in-depth: the menu registration already restricts this page to 'manage_options',
+// but verify again in case this template is ever included from elsewhere.
+if ( ! current_user_can( 'manage_options' ) ) {
+	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'gutenberg-blocks-presets' ) );
 }
 
 // Get overall statistics with caching
