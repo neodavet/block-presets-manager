@@ -106,7 +106,7 @@ Contributions are welcome! Open an issue or submit a pull request.
 - Include unminified sources for any bundled/minified assets
 
 ## License
-GPL v2.0 or later. See `license.txt` or:
+GPL v2.0 or later. See `LICENSE` or:
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 
 ## Credits
