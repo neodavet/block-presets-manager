@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Gutenberg Blocks Presets">
-	<description>PHPCS ruleset for the Gutenberg Blocks Presets plugin.</description>
+<ruleset name="Block Presets Manager">
+	<description>PHPCS ruleset for the Block Presets Manager plugin.</description>
 
 	<file>.</file>
 	<exclude-pattern>/languages/*</exclude-pattern>
@@ -18,8 +18,8 @@
 	<rule ref="WordPress">
 		<!--
 			The main plugin bootstrap file must keep the plugin-slug filename
-			(gutenberg-blocks-presets.php) so WordPress can detect the plugin
-			header; it cannot be renamed to class-gutenberg-blocks-presets.php.
+			(block-presets-manager.php) so WordPress can detect the plugin
+			header; it cannot be renamed to class-block-presets-manager.php.
 		-->
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 		<!--
@@ -33,7 +33,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="gutenberg-blocks-presets"/>
+				<element value="block-presets-manager"/>
 			</property>
 		</properties>
 	</rule>
@@ -41,9 +41,9 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="gbp_"/>
-				<element value="GBP_"/>
-				<element value="Gutenberg_Blocks_Presets"/>
+				<element value="bpmgr_"/>
+				<element value="BPMGR_"/>
+				<element value="Block_Presets_Manager"/>
 			</property>
 		</properties>
 	</rule>

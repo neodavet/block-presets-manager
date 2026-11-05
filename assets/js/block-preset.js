@@ -18,14 +18,14 @@
                 try {
                     setLoading(true);
                     setError(null);
-                    // Query gbp_block_preset posts via REST
+                    // Query bpmgr_block_preset posts via REST
                     const params = new URLSearchParams();
                     params.set('per_page', '50');
                     if (query && query.search) params.set('search', query.search);
-                    if (query && query.categoryId) params.set('gbp_block_category', query.categoryId);
-                    if (query && query.tagId) params.set('gbp_block_tag', query.tagId);
+                    if (query && query.categoryId) params.set('bpmgr_block_category', query.categoryId);
+                    if (query && query.tagId) params.set('bpmgr_block_tag', query.tagId);
 
-                    const posts = await apiFetch({ path: '/wp/v2/gbp_block_preset?' + params.toString() });
+                    const posts = await apiFetch({ path: '/wp/v2/bpmgr_block_preset?' + params.toString() });
                     if (!active) return;
                     setItems(posts || []);
                 } catch (e) {
@@ -68,8 +68,8 @@
         return { terms, loading };
     }
 
-    registerBlockType('gbp/block-preset', {
-        title: __('Block Preset', 'gutenberg-blocks-presets'),
+    registerBlockType('bpmgr/block-preset', {
+        title: __('Block Preset', 'block-presets-manager'),
         icon: 'block-default',
         category: 'widgets',
         attributes: {
@@ -93,15 +93,15 @@
 
             const query = useMemo(() => ({ categoryId, tagId, search }), [categoryId, tagId, search]);
             const { items, loading } = usePresets(query);
-            const { terms: categories } = useTerms('gbp_block_category');
-            const { terms: tags } = useTerms('gbp_block_tag');
+            const { terms: categories } = useTerms('bpmgr_block_category');
+            const { terms: tags } = useTerms('bpmgr_block_tag');
 
             const blockProps = useBlockProps();
 
             const presetOptions = useMemo(() => {
-                const options = [ { label: __('Select a preset…', 'gutenberg-blocks-presets'), value: 0 } ];
+                const options = [ { label: __('Select a preset…', 'block-presets-manager'), value: 0 } ];
                 for (const item of items) {
-                    options.push({ label: item.title && item.title.rendered ? item.title.rendered.replace(/<[^>]*>/g, '') : __('(no title)', 'gutenberg-blocks-presets'), value: item.id });
+                    options.push({ label: item.title && item.title.rendered ? item.title.rendered.replace(/<[^>]*>/g, '') : __('(no title)', 'block-presets-manager'), value: item.id });
                 }
                 return options;
             }, [items]);
@@ -109,26 +109,26 @@
             return (
                 wp.element.createElement('div', blockProps,
                     wp.element.createElement(InspectorControls, null,
-                        wp.element.createElement(PanelBody, { title: __('Preset', 'gutenberg-blocks-presets'), initialOpen: true },
+                        wp.element.createElement(PanelBody, { title: __('Preset', 'block-presets-manager'), initialOpen: true },
                             wp.element.createElement(TextControl, {
-                                label: __('Search', 'gutenberg-blocks-presets'),
+                                label: __('Search', 'block-presets-manager'),
                                 value: search || '',
                                 onChange: (v) => setAttributes({ search: v })
                             }),
                             wp.element.createElement(SelectControl, {
-                                label: __('Filter by Category', 'gutenberg-blocks-presets'),
+                                label: __('Filter by Category', 'block-presets-manager'),
                                 value: categoryId || 0,
-                                options: [{ label: __('All categories', 'gutenberg-blocks-presets'), value: 0 }].concat((categories || []).map(t => ({ label: t.name, value: t.id }))),
+                                options: [{ label: __('All categories', 'block-presets-manager'), value: 0 }].concat((categories || []).map(t => ({ label: t.name, value: t.id }))),
                                 onChange: (val) => setAttributes({ categoryId: parseInt(val, 10) || 0 })
                             }),
                             wp.element.createElement(SelectControl, {
-                                label: __('Filter by Tag', 'gutenberg-blocks-presets'),
+                                label: __('Filter by Tag', 'block-presets-manager'),
                                 value: tagId || 0,
-                                options: [{ label: __('All tags', 'gutenberg-blocks-presets'), value: 0 }].concat((tags || []).map(t => ({ label: t.name, value: t.id }))),
+                                options: [{ label: __('All tags', 'block-presets-manager'), value: 0 }].concat((tags || []).map(t => ({ label: t.name, value: t.id }))),
                                 onChange: (val) => setAttributes({ tagId: parseInt(val, 10) || 0 })
                             }),
                             wp.element.createElement(SelectControl, {
-                                label: __('Select Preset', 'gutenberg-blocks-presets'),
+                                label: __('Select Preset', 'block-presets-manager'),
                                 value: presetId || 0,
                                 options: presetOptions,
                                 onChange: (val) => {
@@ -139,23 +139,23 @@
                             }),
                             loading ? wp.element.createElement(Spinner, null) : null
                         ),
-                        wp.element.createElement(PanelBody, { title: __('Options', 'gutenberg-blocks-presets'), initialOpen: false },
+                        wp.element.createElement(PanelBody, { title: __('Options', 'block-presets-manager'), initialOpen: false },
                             wp.element.createElement(ToggleControl, {
-                                label: __('Show title', 'gutenberg-blocks-presets'),
+                                label: __('Show title', 'block-presets-manager'),
                                 checked: !!showTitle,
                                 onChange: (v) => setAttributes({ showTitle: !!v })
                             }),
                             wp.element.createElement(TextControl, {
-                                label: __('Additional CSS class(es)', 'gutenberg-blocks-presets'),
+                                label: __('Additional CSS class(es)', 'block-presets-manager'),
                                 value: className || '',
                                 onChange: (v) => setAttributes({ className: v })
                             })
                         )
                     ),
                     presetId ? wp.element.createElement(ServerSideRender, {
-                        block: 'gbp/block-preset',
+                        block: 'bpmgr/block-preset',
                         attributes: attributes
-                    }) : wp.element.createElement('div', { className: 'gbp-block-placeholder' }, __('Select a Block Preset from the sidebar.', 'gutenberg-blocks-presets'))
+                    }) : wp.element.createElement('div', { className: 'bpmgr-block-placeholder' }, __('Select a Block Preset from the sidebar.', 'block-presets-manager'))
                 )
             );
         },

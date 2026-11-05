@@ -1,4 +1,4 @@
-# Gutenberg Blocks Presets
+# Block Presets Manager
 
 A free, open-source WordPress plugin to create and manage reusable Gutenberg block presets. Build content once and reuse it anywhere via a native block, PHP helpers, shortcodes, or REST API.
 
@@ -9,11 +9,11 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 - Tested up to: WordPress 7.1
 
 ## Key Features
-- Native custom post type for presets: `gbp_block_preset`
-- Gutenberg block to insert presets (`gbp/block-preset`)
-- Shortcodes: `[gbp_block id="123"]` and legacy `[block_preset id="123"]`
-- PHP helpers: `gbp_render_block_preset()` and legacy `do_cpt_block()`
-- Taxonomies: categories (`gbp_block_category`) and tags (`gbp_block_tag`)
+- Native custom post type for presets: `bpmgr_block_preset`
+- Gutenberg block to insert presets (`bpmgr/block-preset`)
+- Shortcodes: `[bpmgr_block id="123"]` and legacy `[block_preset id="123"]`
+- PHP helpers: `bpmgr_render_block_preset()` and legacy `do_cpt_block()`
+- Taxonomies: categories (`bpmgr_block_category`) and tags (`bpmgr_block_tag`)
 - Usage tracking: local table logs where presets are used
 - REST API: list, fetch, and render presets
 - Admin UI: Settings, Tools, and Statistics
@@ -22,8 +22,8 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 - Translation-ready and full uninstall cleanup
 
 ## Installation
-1. Upload `gutenberg-blocks-presets/` to `wp-content/plugins/`.
-2. Activate “Gutenberg Blocks Presets” in Plugins.
+1. Upload `block-presets-manager/` to `wp-content/plugins/`.
+2. Activate “Block Presets Manager” in Plugins.
 3. Go to Settings → Blocks Presets to configure.
 4. Create presets under the “Block Presets” menu and use the block or shortcodes in your content.
 
@@ -36,25 +36,25 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 ### PHP
 ```php
 // Recommended
-gbp_render_block_preset(123);
+bpmgr_render_block_preset(123);
 
 // Legacy (still supported)
 do_cpt_block(123);
 ```
 
 ### Shortcodes
-- `[gbp_block id="123"]` (recommended)
+- `[bpmgr_block id="123"]` (recommended)
 - `[block_preset id="123"]` (legacy)
 
 ### REST API
-- `GET /wp-json/gbp/v1/block-presets`
-- `GET /wp-json/gbp/v1/block-presets/{id}`
-- `GET /wp-json/gbp/v1/block-presets/{id}/render`
+- `GET /wp-json/bpmgr/v1/block-presets`
+- `GET /wp-json/bpmgr/v1/block-presets/{id}`
+- `GET /wp-json/bpmgr/v1/block-presets/{id}/render`
 
 ## Settings Overview
 Find these under Settings → Blocks Presets.
 
-- Enable Block Presets: core `gbp_block_preset` functionality
+- Enable Block Presets: core `bpmgr_block_preset` functionality
 - Enable ACF Blocks (Optional): auto-register ACF blocks from theme folders when ACF Pro is active
 - Enable Legacy Post Type: keep legacy `block` post type for backward compatibility during migration
 - ACF Block Folders (one per line):
@@ -80,7 +80,7 @@ If ACF is not installed or ACF features are disabled, the plugin works fully wit
 3. Use Block Presets → Tools to migrate old content if needed.
 4. Test:
    - Legacy `do_cpt_block()` calls still work
-   - New `gbp_render_block_preset()` and the Gutenberg block
+   - New `bpmgr_render_block_preset()` and the Gutenberg block
 5. After confirming everything works, disable “Enable Legacy Post Type”.
 
 ## Troubleshooting
@@ -101,7 +101,7 @@ If ACF is not installed or ACF features are disabled, the plugin works fully wit
 ## Contributing
 Contributions are welcome! Open an issue or submit a pull request.
 - Follow WordPress coding standards
-- Keep user-facing strings translatable (`__()`, `_x()`) with text domain `gutenberg-blocks-presets`
+- Keep user-facing strings translatable (`__()`, `_x()`) with text domain `block-presets-manager`
 - Add sanitization/escaping and capability checks where appropriate
 - Include unminified sources for any bundled/minified assets
 

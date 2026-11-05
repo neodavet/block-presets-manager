@@ -1,11 +1,11 @@
-=== Gutenberg Blocks Presets ===
+=== Block Presets Manager ===
 Contributors: davet86
 Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.1
-Text Domain: gutenberg-blocks-presets
+Text Domain: block-presets-manager
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ A powerful native WordPress plugin for creating and managing reusable Gutenberg 
 
 == Description ==
 
-Gutenberg Blocks Presets is a comprehensive solution for managing reusable block content in WordPress. This plugin allows you to create, organize, and deploy block presets across your website with ease.
+Block Presets Manager is a comprehensive solution for managing reusable block content in WordPress. This plugin allows you to create, organize, and deploy block presets across your website with ease.
 
 = Key Features =
 
@@ -22,7 +22,7 @@ Gutenberg Blocks Presets is a comprehensive solution for managing reusable block
 * **Gutenberg Ready**: Full integration with the native WordPress block editor
 * **Usage Tracking**: Monitor which presets are used where and how often
 * **REST API**: Full REST API support for headless implementations
-* **Shortcode Support**: Easy insertion via shortcodes `[gbp_block id="123"]`
+* **Shortcode Support**: Easy insertion via shortcodes `[bpmgr_block id="123"]`
 * **Legacy Compatibility**: Maintains compatibility with existing `do_cpt_block()` functions
 * **Migration Tools**: Seamlessly migrate from old block systems
 * **Statistics Dashboard**: Comprehensive usage analytics and reporting
@@ -40,11 +40,11 @@ Gutenberg Blocks Presets is a comprehensive solution for managing reusable block
 
 = Usage Examples =
 
-In PHP templates: `gbp_render_block_preset(123);` and `do_cpt_block(123)` (legacy support)
+In PHP templates: `bpmgr_render_block_preset(123);` and `do_cpt_block(123)` (legacy support)
 
-In content: `[gbp_block id="123"]` and `[block_preset id="123"]` (legacy)
+In content: `[bpmgr_block id="123"]` and `[block_preset id="123"]` (legacy)
 
-REST API: `GET /wp-json/gbp/v1/block-presets`, `GET /wp-json/gbp/v1/block-presets/123`, `GET /wp-json/gbp/v1/block-presets/123/render`
+REST API: `GET /wp-json/bpmgr/v1/block-presets`, `GET /wp-json/bpmgr/v1/block-presets/123`, `GET /wp-json/bpmgr/v1/block-presets/123/render`
 
 = ACF Integration =
 
@@ -68,7 +68,7 @@ Seamlessly migrate from existing block systems with built-in migration tools tha
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/gutenberg-blocks-presets/`
+1. Upload the plugin files to `/wp-content/plugins/block-presets-manager/`
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Navigate to Settings > Blocks Presets to configure the plugin
 4. Start creating block presets under the new "Block Presets" menu
@@ -108,10 +108,10 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 = 1.0.1 =
 * Security: REST API endpoint for a single block preset no longer exposes draft/private/trashed presets to unauthenticated requests
 * Security: removed a duplicate, conflicting registration of the plugin settings that had silently dropped path-safety validation on the ACF block folders setting
-* Fix: resolved a fatal error that occurred whenever `gbp_render_block_preset()`, `do_cpt_block()`, or related helper functions were called from a theme
+* Fix: resolved a fatal error that occurred whenever `bpmgr_render_block_preset()`, `do_cpt_block()`, or related helper functions were called from a theme
 * Fix: resolved a fatal error on `plugins_loaded` caused by a missing text domain loader
 * Fix: resolved a fatal error on activation caused by `register_activation_hook()`/`register_deactivation_hook()` being registered too late; plugin settings and the usage-tracking table are now correctly created on activation
-* Fix: the `[gbp_block]` and `[block_preset]` shortcodes now actually register and render (they previously never worked)
+* Fix: the `[bpmgr_block]` and `[block_preset]` shortcodes now actually register and render (they previously never worked)
 * Fix: the Tools page "Export Block Presets" action now produces a valid downloadable JSON file instead of a broken response
 * i18n: the block editor script's translatable strings are now loaded via `wp_set_script_translations()`, so they can actually be translated
 * i18n: added missing localized strings for the admin JS, and switched a count-based message to use proper singular/plural forms
@@ -138,7 +138,7 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 Security and stability update: fixes two fatal-error bugs and closes a settings-validation gap. Upgrade is recommended for all users.
 
 = 1.0.0 =
-Initial release of Gutenberg Blocks Presets. If you're migrating from a custom implementation, use the migration tools in Block Presets > Tools.
+Initial release of Block Presets Manager. If you're migrating from a custom implementation, use the migration tools in Block Presets > Tools.
 
 == Developer Information ==
 
@@ -147,18 +147,18 @@ Initial release of Gutenberg Blocks Presets. If you're migrating from a custom i
 The plugin provides numerous hooks for customization:
 
 Filters:
-- `gbp_block_preset_content` - Filter block preset output
+- `bpmgr_block_preset_content` - Filter block preset output
 
 = REST API Endpoints =
 
-- `GET /wp-json/gbp/v1/block-presets` - List all presets
-- `GET /wp-json/gbp/v1/block-presets/{id}` - Get specific preset
-- `GET /wp-json/gbp/v1/block-presets/{id}/render` - Get rendered preset
+- `GET /wp-json/bpmgr/v1/block-presets` - List all presets
+- `GET /wp-json/bpmgr/v1/block-presets/{id}` - Get specific preset
+- `GET /wp-json/bpmgr/v1/block-presets/{id}/render` - Get rendered preset
 
 = File Structure =
 
-    gutenberg-blocks-presets/
-    ├── gutenberg-blocks-presets.php
+    block-presets-manager/
+    ├── block-presets-manager.php
     ├── uninstall.php
     ├── readme.txt
     ├── LICENSE
@@ -168,11 +168,11 @@ Filters:
     │   └── js/
     │       └── block-preset.js
     ├── includes/
-    │   ├── class-gbp-post-types.php
-    │   ├── class-gbp-acf-blocks.php
-    │   ├── class-gbp-gutenberg-blocks.php
-    │   ├── class-gbp-helper-functions.php
-    │   └── class-gbp-admin.php
+    │   ├── class-bpmgr-post-types.php
+    │   ├── class-bpmgr-acf-blocks.php
+    │   ├── class-bpmgr-gutenberg-blocks.php
+    │   ├── class-bpmgr-helper-functions.php
+    │   └── class-bpmgr-admin.php
     └── admin/
         ├── settings-page.php
         ├── tools-page.php

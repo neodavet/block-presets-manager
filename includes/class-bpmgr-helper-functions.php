@@ -1,8 +1,8 @@
 <?php
 /**
- * Helper Functions for Gutenberg Blocks Presets
+ * Helper Functions for Block Presets Manager
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  * @since 1.0.0
  */
 
@@ -14,12 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper Functions Class
  */
-class GBP_Helper_Functions {
+class BPMGR_Helper_Functions {
 
 	/**
 	 * Instance of this class
 	 *
-	 * @var GBP_Helper_Functions
+	 * @var BPMGR_Helper_Functions
 	 */
 	private static $instance = null;
 
@@ -41,7 +41,7 @@ class GBP_Helper_Functions {
 		$this->define_global_functions();
 
 		// Register shortcodes directly rather than via add_action( 'init', ... ): this class is
-		// only ever instantiated from Gutenberg_Blocks_Presets::init(), which is itself already
+		// only ever instantiated from Block_Presets_Manager::init(), which is itself already
 		// running as an 'init' callback. Re-hooking to the currently-executing 'init' pass is
 		// not reliably picked up, which previously left the shortcodes unregistered.
 		$this->register_shortcodes();
@@ -56,7 +56,7 @@ class GBP_Helper_Functions {
 	 * @return bool
 	 */
 	public static function is_debug_enabled() {
-		$settings = get_option( 'gbp_settings', array() );
+		$settings = get_option( 'bpmgr_settings', array() );
 		return ! empty( $settings['enable_debug_logging'] );
 	}
 
@@ -72,9 +72,9 @@ class GBP_Helper_Functions {
 		}
 		// Debug logging is opt-in via the 'enable_debug_logging' setting checked above.
 		if ( is_array( $message ) || is_object( $message ) ) {
-			error_log( 'GBP: ' . print_r( $message, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r
+			error_log( 'BPMGR: ' . print_r( $message, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		} else {
-			error_log( 'GBP: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'BPMGR: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 	}
 
@@ -82,7 +82,7 @@ class GBP_Helper_Functions {
 	 * Define global helper functions
 	 */
 	private function define_global_functions() {
-		if ( ! function_exists( 'gbp_render_block_preset' ) ) {
+		if ( ! function_exists( 'bpmgr_render_block_preset' ) ) {
 			/**
 			 * Render a block preset by ID
 			 *
@@ -90,17 +90,17 @@ class GBP_Helper_Functions {
 			 * @param array $args Additional arguments
 			 * @return void
 			 */
-			function gbp_render_block_preset( $block_id, $args = array() ) {
+			function bpmgr_render_block_preset( $block_id, $args = array() ) {
 				// Fully qualified on purpose: this is a global function nested inside a method,
 				// so "self::" would resolve to no class scope and fatal at call time.
-				GBP_Helper_Functions::render_block_preset( $block_id, $args ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
+				BPMGR_Helper_Functions::render_block_preset( $block_id, $args ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
 			}
 		}
 
 		if ( ! function_exists( 'do_cpt_block' ) ) {
 			/**
 			 * Legacy function to maintain backward compatibility
-			 * Renders a block preset - wrapper for gbp_render_block_preset
+			 * Renders a block preset - wrapper for bpmgr_render_block_preset
 			 *
 			 * Deliberately unprefixed: this name is kept as-is for backward compatibility with sites
 			 * migrating from the legacy block system that already call do_cpt_block().
@@ -109,33 +109,33 @@ class GBP_Helper_Functions {
 			 * @return void
 			 */
 			function do_cpt_block( $block_id ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-				gbp_render_block_preset( $block_id );
+				bpmgr_render_block_preset( $block_id );
 			}
 		}
 
-		if ( ! function_exists( 'gbp_get_block_presets' ) ) {
+		if ( ! function_exists( 'bpmgr_get_block_presets' ) ) {
 			/**
 			 * Get block presets
 			 *
 			 * @param array $args Query arguments
 			 * @return WP_Query Block presets query
 			 */
-			function gbp_get_block_presets( $args = array() ) {
+			function bpmgr_get_block_presets( $args = array() ) {
 				// Fully qualified on purpose: nested global function, "self::" is not valid here.
-				return GBP_Helper_Functions::get_block_presets( $args ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
+				return BPMGR_Helper_Functions::get_block_presets( $args ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
 			}
 		}
 
-		if ( ! function_exists( 'gbp_get_block_preset_content' ) ) {
+		if ( ! function_exists( 'bpmgr_get_block_preset_content' ) ) {
 			/**
 			 * Get block preset content without rendering
 			 *
 			 * @param int $block_id Block preset ID
 			 * @return string Block content
 			 */
-			function gbp_get_block_preset_content( $block_id ) {
+			function bpmgr_get_block_preset_content( $block_id ) {
 				// Fully qualified on purpose: nested global function, "self::" is not valid here.
-				return GBP_Helper_Functions::get_block_preset_content( $block_id ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
+				return BPMGR_Helper_Functions::get_block_preset_content( $block_id ); // phpcs:ignore Squiz.Classes.SelfMemberReference.NotUsed
 			}
 		}
 	}
@@ -144,7 +144,7 @@ class GBP_Helper_Functions {
 	 * Register shortcodes
 	 */
 	public function register_shortcodes() {
-		add_shortcode( 'gbp_block', array( $this, 'block_preset_shortcode' ) );
+		add_shortcode( 'bpmgr_block', array( $this, 'block_preset_shortcode' ) );
 		add_shortcode( 'block_preset', array( $this, 'block_preset_shortcode' ) ); // Legacy support.
 	}
 
@@ -153,7 +153,7 @@ class GBP_Helper_Functions {
 	 */
 	public function register_rest_endpoints() {
 		register_rest_route(
-			'gbp/v1',
+			'bpmgr/v1',
 			'/block-presets',
 			array(
 				'methods'             => 'GET',
@@ -163,7 +163,7 @@ class GBP_Helper_Functions {
 		);
 
 		register_rest_route(
-			'gbp/v1',
+			'bpmgr/v1',
 			'/block-presets/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
@@ -173,7 +173,7 @@ class GBP_Helper_Functions {
 		);
 
 		register_rest_route(
-			'gbp/v1',
+			'bpmgr/v1',
 			'/block-presets/(?P<id>\d+)/render',
 			array(
 				'methods'             => 'GET',
@@ -202,7 +202,7 @@ class GBP_Helper_Functions {
 		}
 
 		// Check if it's a valid block preset post type
-		if ( ! in_array( $block->post_type, array( 'gbp_block_preset', 'block' ), true ) ) {
+		if ( ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) ) {
 			return;
 		}
 
@@ -218,7 +218,7 @@ class GBP_Helper_Functions {
 		$defaults = array(
 			'before'        => '',
 			'after'         => '',
-			'wrapper_class' => 'gbp-block-preset-wrapper',
+			'wrapper_class' => 'bpmgr-block-preset-wrapper',
 			'apply_filters' => true,
 		);
 
@@ -249,7 +249,7 @@ class GBP_Helper_Functions {
 		}
 
 		// Allow filtering of final output
-		$content = apply_filters( 'gbp_block_preset_content', $content, $block_id, $block, $args );
+		$content = apply_filters( 'bpmgr_block_preset_content', $content, $block_id, $block, $args );
 
 		echo wp_kses_post( $content );
 	}
@@ -262,7 +262,7 @@ class GBP_Helper_Functions {
 	 */
 	public static function get_block_presets( $args = array() ) {
 		$defaults = array(
-			'post_type'      => array( 'gbp_block_preset', 'block' ), // Support both new and old post types.
+			'post_type'      => array( 'bpmgr_block_preset', 'block' ), // Support both new and old post types.
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'title',
@@ -287,7 +287,7 @@ class GBP_Helper_Functions {
 
 		$block = get_post( $block_id );
 
-		if ( ! $block || ! in_array( $block->post_type, array( 'gbp_block_preset', 'block' ), true ) ) {
+		if ( ! $block || ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) ) {
 			return '';
 		}
 
@@ -309,7 +309,7 @@ class GBP_Helper_Functions {
 
 		// Table name is built from $wpdb->prefix (not user input), so it is safe to interpolate;
 		// $wpdb->prepare() does not support table/column identifiers as placeholders.
-		$table_name = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 
 		// Check if record exists
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -365,7 +365,7 @@ class GBP_Helper_Functions {
 				'wrapper' => 'div',
 			),
 			$atts,
-			'gbp_block'
+			'bpmgr_block'
 		);
 
 		if ( empty( $atts['id'] ) ) {
@@ -376,7 +376,7 @@ class GBP_Helper_Functions {
 
 		$args = array();
 		if ( ! empty( $atts['class'] ) ) {
-			$args['wrapper_class'] = 'gbp-block-preset-wrapper ' . esc_attr( $atts['class'] );
+			$args['wrapper_class'] = 'bpmgr-block-preset-wrapper ' . esc_attr( $atts['class'] );
 		}
 
 		self::render_block_preset( $atts['id'], $args );
@@ -405,7 +405,7 @@ class GBP_Helper_Functions {
 		if ( $request->get_param( 'category' ) ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'gbp_block_category',
+					'taxonomy' => 'bpmgr_block_category',
 					'field'    => 'slug',
 					'terms'    => sanitize_text_field( $request->get_param( 'category' ) ),
 				),
@@ -415,7 +415,7 @@ class GBP_Helper_Functions {
 		if ( $request->get_param( 'tag' ) ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'gbp_block_tag',
+					'taxonomy' => 'bpmgr_block_tag',
 					'field'    => 'slug',
 					'terms'    => sanitize_text_field( $request->get_param( 'tag' ) ),
 				),
@@ -433,8 +433,8 @@ class GBP_Helper_Functions {
 				'content'        => get_the_content(),
 				'excerpt'        => get_the_excerpt(),
 				'featured_image' => get_the_post_thumbnail_url( get_the_ID(), 'medium' ),
-				'categories'     => wp_get_post_terms( get_the_ID(), 'gbp_block_category' ),
-				'tags'           => wp_get_post_terms( get_the_ID(), 'gbp_block_tag' ),
+				'categories'     => wp_get_post_terms( get_the_ID(), 'bpmgr_block_category' ),
+				'tags'           => wp_get_post_terms( get_the_ID(), 'bpmgr_block_tag' ),
 			);
 		}
 
@@ -455,8 +455,8 @@ class GBP_Helper_Functions {
 
 		// Also verify publish status: this is a public, unauthenticated endpoint, so
 		// draft/private/trashed presets must never be returned.
-		if ( ! $block || ! in_array( $block->post_type, array( 'gbp_block_preset', 'block' ), true ) || 'publish' !== $block->post_status ) {
-			return new WP_REST_Response( array( 'error' => __( 'Block preset not found.', 'gutenberg-blocks-presets' ) ), 404 );
+		if ( ! $block || ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) || 'publish' !== $block->post_status ) {
+			return new WP_REST_Response( array( 'error' => __( 'Block preset not found.', 'block-presets-manager' ) ), 404 );
 		}
 
 		$preset = array(
@@ -467,8 +467,8 @@ class GBP_Helper_Functions {
 			'raw_content'    => $block->post_content,
 			'excerpt'        => $block->post_excerpt,
 			'featured_image' => get_the_post_thumbnail_url( $block->ID, 'large' ),
-			'categories'     => wp_get_post_terms( $block->ID, 'gbp_block_category' ),
-			'tags'           => wp_get_post_terms( $block->ID, 'gbp_block_tag' ),
+			'categories'     => wp_get_post_terms( $block->ID, 'bpmgr_block_category' ),
+			'tags'           => wp_get_post_terms( $block->ID, 'bpmgr_block_tag' ),
 		);
 
 		return new WP_REST_Response( $preset, 200 );
@@ -488,7 +488,7 @@ class GBP_Helper_Functions {
 		$rendered_content = ob_get_clean();
 
 		if ( empty( $rendered_content ) ) {
-			return new WP_REST_Response( array( 'error' => __( 'Block preset not found or empty.', 'gutenberg-blocks-presets' ) ), 404 );
+			return new WP_REST_Response( array( 'error' => __( 'Block preset not found or empty.', 'block-presets-manager' ) ), 404 );
 		}
 
 		return new WP_REST_Response(

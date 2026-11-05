@@ -1,7 +1,7 @@
 /**
- * Admin JavaScript for Gutenberg Blocks Presets
+ * Admin JavaScript for Block Presets Manager
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  * @since 1.0.0
  */
 
@@ -9,13 +9,13 @@ jQuery(document).ready(function($) {
     'use strict';
 
     // Initialize admin functionality
-    GBP_Admin.init();
+    BPMGR_Admin.init();
 });
 
 /**
  * Main Admin Object
  */
-var GBP_Admin = {
+var BPMGR_Admin = {
     
     /**
      * Initialize admin functionality
@@ -32,7 +32,7 @@ var GBP_Admin = {
      */
     initCopyToClipboard: function() {
         // Copy shortcode/function code when clicked
-        $(document).on('click', '.gbp-widget input[readonly], .gbp-tool-card input[readonly]', function() {
+        $(document).on('click', '.bpmgr-widget input[readonly], .bpmgr-tool-card input[readonly]', function() {
             this.select();
             document.execCommand('copy');
             
@@ -52,7 +52,7 @@ var GBP_Admin = {
      */
     initFormValidation: function() {
         // Validate block folders input
-        $('#gbp_settings_block_folders').on('blur', function() {
+        $('#bpmgr_settings_block_folders').on('blur', function() {
             var value = $(this).val();
             var lines = value.split('\n');
             var hasErrors = false;
@@ -67,7 +67,7 @@ var GBP_Admin = {
             
             if (hasErrors) {
                 $(this).css('border-color', '#dc3232');
-                alert(gbp_admin.strings.invalid_path || 'Invalid path detected. Paths cannot contain ".."');
+                alert(bpmgr_admin.strings.invalid_path || 'Invalid path detected. Paths cannot contain ".."');
             } else {
                 $(this).css('border-color', '');
             }
@@ -79,18 +79,18 @@ var GBP_Admin = {
      */
     initToolTips: function() {
         // Add tooltip functionality for help icons
-        $('.gbp-help-tip').on('mouseenter', function() {
+        $('.bpmgr-help-tip').on('mouseenter', function() {
             var tip = $(this).data('tip');
             if (tip) {
-                $('<div class="gbp-tooltip"></div>')
+                $('<div class="bpmgr-tooltip"></div>')
                     .text(tip)
                     .appendTo('body')
                     .fadeIn('fast');
             }
         }).on('mouseleave', function() {
-            $('.gbp-tooltip').remove();
+            $('.bpmgr-tooltip').remove();
         }).on('mousemove', function(e) {
-            $('.gbp-tooltip').css({
+            $('.bpmgr-tooltip').css({
                 top: e.pageY + 10,
                 left: e.pageX + 10
             });
@@ -102,7 +102,7 @@ var GBP_Admin = {
      */
     initCharts: function() {
         // Enhanced chart rendering if Chart.js is available
-        if (typeof Chart !== 'undefined' && $('#gbp-usage-chart').length) {
+        if (typeof Chart !== 'undefined' && $('#bpmgr-usage-chart').length) {
             this.renderUsageChart();
         }
     },
@@ -111,10 +111,10 @@ var GBP_Admin = {
      * Render usage chart with Chart.js
      */
     renderUsageChart: function() {
-        var ctx = document.getElementById('gbp-usage-chart').getContext('2d');
+        var ctx = document.getElementById('bpmgr-usage-chart').getContext('2d');
         
         // Get data from the page (should be localized)
-        var chartData = window.gbp_chart_data || [];
+        var chartData = window.bpmgr_chart_data || [];
         
         if (chartData.length === 0) {
             return;
@@ -160,7 +160,7 @@ var GBP_Admin = {
 /**
  * Block preset management functions
  */
-var GBP_BlockPresets = {
+var BPMGR_BlockPresets = {
     
     /**
      * Preview block preset
@@ -169,25 +169,25 @@ var GBP_BlockPresets = {
         if (!blockId) return;
         
         $.ajax({
-            url: gbp_admin.ajax_url,
+            url: bpmgr_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'gbp_preview_block',
+                action: 'bpmgr_preview_block',
                 block_id: blockId,
-                nonce: gbp_admin.nonce
+                nonce: bpmgr_admin.nonce
             },
             beforeSend: function() {
-                $('#gbp-preview-container').html('<p>' + (gbp_admin.strings.loading || 'Loading...') + '</p>');
+                $('#bpmgr-preview-container').html('<p>' + (bpmgr_admin.strings.loading || 'Loading...') + '</p>');
             },
             success: function(response) {
                 if (response.success) {
-                    $('#gbp-preview-container').html(response.data.content);
+                    $('#bpmgr-preview-container').html(response.data.content);
                 } else {
-                    $('#gbp-preview-container').html('<p class="error">' + response.data + '</p>');
+                    $('#bpmgr-preview-container').html('<p class="error">' + response.data + '</p>');
                 }
             },
             error: function() {
-                $('#gbp-preview-container').html('<p class="error">' + (gbp_admin.strings.preview_failed || 'Preview failed to load.') + '</p>');
+                $('#bpmgr-preview-container').html('<p class="error">' + (bpmgr_admin.strings.preview_failed || 'Preview failed to load.') + '</p>');
             }
         });
     },
@@ -196,23 +196,23 @@ var GBP_BlockPresets = {
      * Duplicate block preset
      */
     duplicate: function(blockId) {
-        if (!blockId || !confirm(gbp_admin.strings.confirm_duplicate || 'Duplicate this block preset?')) {
+        if (!blockId || !confirm(bpmgr_admin.strings.confirm_duplicate || 'Duplicate this block preset?')) {
             return;
         }
         
         $.ajax({
-            url: gbp_admin.ajax_url,
+            url: bpmgr_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'gbp_duplicate_block',
+                action: 'bpmgr_duplicate_block',
                 block_id: blockId,
-                nonce: gbp_admin.nonce
+                nonce: bpmgr_admin.nonce
             },
             success: function(response) {
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data || gbp_admin.strings.duplication_failed || 'Duplication failed.');
+                    alert(response.data || bpmgr_admin.strings.duplication_failed || 'Duplication failed.');
                 }
             }
         });
@@ -222,7 +222,7 @@ var GBP_BlockPresets = {
 /**
  * Utility functions
  */
-var GBP_Utils = {
+var BPMGR_Utils = {
     
     /**
      * Format number with commas

@@ -2,12 +2,12 @@
 /**
  * Admin Statistics Page Template
  *
- * This template is always `include`d from GBP_Admin::statistics_page(), so its
+ * This template is always `include`d from BPMGR_Admin::statistics_page(), so its
  * top-level variables are local to that method call at runtime, not real globals.
  * phpcs analyzes included template files statically and cannot see that, hence the
  * blanket disable below for the "unprefixed global" sniff.
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  * @since 1.0.0
  */
 
@@ -21,61 +21,61 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Defense-in-depth: the menu registration already restricts this page to 'manage_options',
 // but verify again in case this template is ever included from elsewhere.
 if ( ! current_user_can( 'manage_options' ) ) {
-	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'gutenberg-blocks-presets' ) );
+	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'block-presets-manager' ) );
 }
 
 // Get overall statistics with caching
-$total_presets  = wp_count_posts( 'gbp_block_preset' )->publish;
-$total_usage    = gbp_get_total_usage_cached();
-$most_used      = gbp_get_most_used_presets_cached();
-$unused_presets = gbp_get_unused_presets_cached();
-$recent_usage   = gbp_get_recent_usage_cached();
+$total_presets  = wp_count_posts( 'bpmgr_block_preset' )->publish;
+$total_usage    = bpmgr_get_total_usage_cached();
+$most_used      = bpmgr_get_most_used_presets_cached();
+$unused_presets = bpmgr_get_unused_presets_cached();
+$recent_usage   = bpmgr_get_recent_usage_cached();
 
 ?>
 
 <div class="wrap">
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 	
-	<div class="gbp-stats-container">
+	<div class="bpmgr-stats-container">
 		
 		<!-- Overview Cards -->
-		<div class="gbp-stats-cards">
-			<div class="gbp-stat-card">
-				<h3><?php esc_html_e( 'Total Block Presets', 'gutenberg-blocks-presets' ); ?></h3>
-				<div class="gbp-stat-number"><?php echo esc_html( $total_presets ); ?></div>
+		<div class="bpmgr-stats-cards">
+			<div class="bpmgr-stat-card">
+				<h3><?php esc_html_e( 'Total Block Presets', 'block-presets-manager' ); ?></h3>
+				<div class="bpmgr-stat-number"><?php echo esc_html( $total_presets ); ?></div>
 			</div>
 			
-			<div class="gbp-stat-card">
-				<h3><?php esc_html_e( 'Total Usage Count', 'gutenberg-blocks-presets' ); ?></h3>
-				<div class="gbp-stat-number"><?php echo esc_html( $total_usage ? $total_usage : 0 ); ?></div>
+			<div class="bpmgr-stat-card">
+				<h3><?php esc_html_e( 'Total Usage Count', 'block-presets-manager' ); ?></h3>
+				<div class="bpmgr-stat-number"><?php echo esc_html( $total_usage ? $total_usage : 0 ); ?></div>
 			</div>
 			
-			<div class="gbp-stat-card">
-				<h3><?php esc_html_e( 'Unused Presets', 'gutenberg-blocks-presets' ); ?></h3>
-				<div class="gbp-stat-number"><?php echo esc_html( count( $unused_presets ) ); ?></div>
+			<div class="bpmgr-stat-card">
+				<h3><?php esc_html_e( 'Unused Presets', 'block-presets-manager' ); ?></h3>
+				<div class="bpmgr-stat-number"><?php echo esc_html( count( $unused_presets ) ); ?></div>
 			</div>
 			
-			<div class="gbp-stat-card">
-				<h3><?php esc_html_e( 'Average Usage', 'gutenberg-blocks-presets' ); ?></h3>
-				<div class="gbp-stat-number">
+			<div class="bpmgr-stat-card">
+				<h3><?php esc_html_e( 'Average Usage', 'block-presets-manager' ); ?></h3>
+				<div class="bpmgr-stat-number">
 					<?php echo esc_html( $total_presets > 0 ? round( ( $total_usage ? $total_usage : 0 ) / $total_presets, 1 ) : 0 ); ?>
 				</div>
 			</div>
 		</div>
 		
-		<div class="gbp-stats-grid">
+		<div class="bpmgr-stats-grid">
 			
 			<!-- Most Used Presets -->
-			<div class="gbp-stats-section">
-				<h2><?php esc_html_e( 'Most Used Block Presets', 'gutenberg-blocks-presets' ); ?></h2>
+			<div class="bpmgr-stats-section">
+				<h2><?php esc_html_e( 'Most Used Block Presets', 'block-presets-manager' ); ?></h2>
 				
 				<?php if ( ! empty( $most_used ) ) : ?>
 					<table class="wp-list-table widefat fixed striped">
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Block Preset', 'gutenberg-blocks-presets' ); ?></th>
-								<th><?php esc_html_e( 'Usage Count', 'gutenberg-blocks-presets' ); ?></th>
-								<th><?php esc_html_e( 'Actions', 'gutenberg-blocks-presets' ); ?></th>
+								<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Usage Count', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Actions', 'block-presets-manager' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -91,7 +91,7 @@ $recent_usage   = gbp_get_recent_usage_cached();
 								<td><?php echo esc_html( $preset->total_usage ? $preset->total_usage : 0 ); ?></td>
 								<td>
 									<a href="<?php echo esc_url( get_edit_post_link( $preset->ID ) ); ?>" class="button button-small">
-										<?php esc_html_e( 'Edit', 'gutenberg-blocks-presets' ); ?>
+										<?php esc_html_e( 'Edit', 'block-presets-manager' ); ?>
 									</a>
 								</td>
 							</tr>
@@ -99,22 +99,22 @@ $recent_usage   = gbp_get_recent_usage_cached();
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No usage data available yet.', 'gutenberg-blocks-presets' ); ?></p>
+					<p><?php esc_html_e( 'No usage data available yet.', 'block-presets-manager' ); ?></p>
 				<?php endif; ?>
 			</div>
 			
 			<!-- Recent Activity -->
-			<div class="gbp-stats-section">
-				<h2><?php esc_html_e( 'Recent Usage Activity', 'gutenberg-blocks-presets' ); ?></h2>
+			<div class="bpmgr-stats-section">
+				<h2><?php esc_html_e( 'Recent Usage Activity', 'block-presets-manager' ); ?></h2>
 				
 				<?php if ( ! empty( $recent_usage ) ) : ?>
 					<table class="wp-list-table widefat fixed striped">
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Block Preset', 'gutenberg-blocks-presets' ); ?></th>
-								<th><?php esc_html_e( 'Used On', 'gutenberg-blocks-presets' ); ?></th>
-								<th><?php esc_html_e( 'Last Used', 'gutenberg-blocks-presets' ); ?></th>
-								<th><?php esc_html_e( 'Count', 'gutenberg-blocks-presets' ); ?></th>
+								<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Used On', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Last Used', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Count', 'block-presets-manager' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -122,14 +122,14 @@ $recent_usage   = gbp_get_recent_usage_cached();
 							<tr>
 								<td><?php echo esc_html( $usage->block_title ); ?></td>
 								<td><?php echo esc_html( $usage->used_on ); ?></td>
-								<td><?php echo esc_html( human_time_diff( strtotime( $usage->last_used ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'gutenberg-blocks-presets' ) ); ?></td>
+								<td><?php echo esc_html( human_time_diff( strtotime( $usage->last_used ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'block-presets-manager' ) ); ?></td>
 								<td><?php echo esc_html( $usage->usage_count ); ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No recent usage activity.', 'gutenberg-blocks-presets' ); ?></p>
+					<p><?php esc_html_e( 'No recent usage activity.', 'block-presets-manager' ); ?></p>
 				<?php endif; ?>
 			</div>
 			
@@ -137,15 +137,15 @@ $recent_usage   = gbp_get_recent_usage_cached();
 		
 		<!-- Unused Presets -->
 		<?php if ( ! empty( $unused_presets ) ) : ?>
-		<div class="gbp-stats-section gbp-full-width">
-			<h2><?php esc_html_e( 'Unused Block Presets', 'gutenberg-blocks-presets' ); ?></h2>
-			<p><?php esc_html_e( 'These block presets have never been used. Consider reviewing them for relevance.', 'gutenberg-blocks-presets' ); ?></p>
+		<div class="bpmgr-stats-section bpmgr-full-width">
+			<h2><?php esc_html_e( 'Unused Block Presets', 'block-presets-manager' ); ?></h2>
+			<p><?php esc_html_e( 'These block presets have never been used. Consider reviewing them for relevance.', 'block-presets-manager' ); ?></p>
 			
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Block Preset', 'gutenberg-blocks-presets' ); ?></th>
-						<th><?php esc_html_e( 'Actions', 'gutenberg-blocks-presets' ); ?></th>
+						<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
+						<th><?php esc_html_e( 'Actions', 'block-presets-manager' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -160,10 +160,10 @@ $recent_usage   = gbp_get_recent_usage_cached();
 						</td>
 						<td>
 							<a href="<?php echo esc_url( get_edit_post_link( $preset->ID ) ); ?>" class="button button-small">
-								<?php esc_html_e( 'Edit', 'gutenberg-blocks-presets' ); ?>
+								<?php esc_html_e( 'Edit', 'block-presets-manager' ); ?>
 							</a>
 							<a href="<?php echo esc_url( get_permalink( $preset->ID ) ); ?>" class="button button-small" target="_blank">
-								<?php esc_html_e( 'Preview', 'gutenberg-blocks-presets' ); ?>
+								<?php esc_html_e( 'Preview', 'block-presets-manager' ); ?>
 							</a>
 						</td>
 					</tr>
@@ -174,23 +174,23 @@ $recent_usage   = gbp_get_recent_usage_cached();
 		<?php endif; ?>
 		
 		<!-- Usage by Month Chart -->
-		<div class="gbp-stats-section gbp-full-width">
-			<h2><?php esc_html_e( 'Usage Trends', 'gutenberg-blocks-presets' ); ?></h2>
+		<div class="bpmgr-stats-section bpmgr-full-width">
+			<h2><?php esc_html_e( 'Usage Trends', 'block-presets-manager' ); ?></h2>
 			
 			<?php
 			// Get usage by month for the last 12 months
-			$monthly_usage = gbp_get_monthly_usage_cached();
+			$monthly_usage = bpmgr_get_monthly_usage_cached();
 
 			if ( ! empty( $monthly_usage ) ) :
 				?>
-				<div class="gbp-chart-container">
-					<canvas id="gbp-usage-chart" width="400" height="200"></canvas>
+				<div class="bpmgr-chart-container">
+					<canvas id="bpmgr-usage-chart" width="400" height="200"></canvas>
 				</div>
 				
 				<script>
 				// Simple chart implementation (you might want to use Chart.js or similar)
 				document.addEventListener('DOMContentLoaded', function() {
-					const canvas = document.getElementById('gbp-usage-chart');
+					const canvas = document.getElementById('bpmgr-usage-chart');
 					const ctx = canvas.getContext('2d');
 					
 					// Chart data
@@ -225,7 +225,7 @@ $recent_usage   = gbp_get_recent_usage_cached();
 				});
 				</script>
 			<?php else : ?>
-				<p><?php esc_html_e( 'No usage trend data available yet.', 'gutenberg-blocks-presets' ); ?></p>
+				<p><?php esc_html_e( 'No usage trend data available yet.', 'block-presets-manager' ); ?></p>
 			<?php endif; ?>
 		</div>
 		
@@ -240,19 +240,19 @@ $recent_usage   = gbp_get_recent_usage_cached();
 /**
  * Get total usage count with caching
  */
-function gbp_get_total_usage_cached() {
-	$cache_key   = 'gbp_total_usage';
-	$total_usage = wp_cache_get( $cache_key, 'gbp_statistics' );
+function bpmgr_get_total_usage_cached() {
+	$cache_key   = 'bpmgr_total_usage';
+	$total_usage = wp_cache_get( $cache_key, 'bpmgr_statistics' );
 
 	if ( false === $total_usage ) {
 		global $wpdb;
-		$table_name  = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifiers only, see comment above.
 		$total_usage = $wpdb->get_var( "SELECT SUM(usage_count) FROM {$table_name}" );
 
 		// Cache for 5 minutes
-		wp_cache_set( $cache_key, $total_usage, 'gbp_statistics', 300 );
+		wp_cache_set( $cache_key, $total_usage, 'bpmgr_statistics', 300 );
 	}
 
 	return $total_usage;
@@ -261,21 +261,21 @@ function gbp_get_total_usage_cached() {
 /**
  * Get most used presets with caching
  */
-function gbp_get_most_used_presets_cached() {
-	$cache_key = 'gbp_most_used_presets';
-	$most_used = wp_cache_get( $cache_key, 'gbp_statistics' );
+function bpmgr_get_most_used_presets_cached() {
+	$cache_key = 'bpmgr_most_used_presets';
+	$most_used = wp_cache_get( $cache_key, 'bpmgr_statistics' );
 
 	if ( false === $most_used ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifiers only, see comment above.
-		$most_used  = $wpdb->get_results(
+		$most_used = $wpdb->get_results(
 			"
             SELECT p.ID, p.post_title, SUM(u.usage_count) as total_usage 
             FROM {$wpdb->posts} p 
             LEFT JOIN {$table_name} u ON p.ID = u.block_id 
-            WHERE p.post_type = 'gbp_block_preset' AND p.post_status = 'publish'
+            WHERE p.post_type = 'bpmgr_block_preset' AND p.post_status = 'publish'
             GROUP BY p.ID 
             ORDER BY total_usage DESC 
             LIMIT 10
@@ -284,7 +284,7 @@ function gbp_get_most_used_presets_cached() {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Cache for 10 minutes
-		wp_cache_set( $cache_key, $most_used, 'gbp_statistics', 600 );
+		wp_cache_set( $cache_key, $most_used, 'bpmgr_statistics', 600 );
 	}
 
 	return $most_used;
@@ -293,13 +293,13 @@ function gbp_get_most_used_presets_cached() {
 /**
  * Get unused presets with caching
  */
-function gbp_get_unused_presets_cached() {
-	$cache_key      = 'gbp_unused_presets';
-	$unused_presets = wp_cache_get( $cache_key, 'gbp_statistics' );
+function bpmgr_get_unused_presets_cached() {
+	$cache_key      = 'bpmgr_unused_presets';
+	$unused_presets = wp_cache_get( $cache_key, 'bpmgr_statistics' );
 
 	if ( false === $unused_presets ) {
 		global $wpdb;
-		$table_name     = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifiers only, see comment above.
 		$unused_presets = $wpdb->get_results(
@@ -307,7 +307,7 @@ function gbp_get_unused_presets_cached() {
             SELECT p.ID, p.post_title 
             FROM {$wpdb->posts} p 
             LEFT JOIN {$table_name} u ON p.ID = u.block_id 
-            WHERE p.post_type = 'gbp_block_preset' 
+            WHERE p.post_type = 'bpmgr_block_preset' 
             AND p.post_status = 'publish' 
             AND u.block_id IS NULL 
             ORDER BY p.post_title ASC
@@ -316,7 +316,7 @@ function gbp_get_unused_presets_cached() {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Cache for 15 minutes
-		wp_cache_set( $cache_key, $unused_presets, 'gbp_statistics', 900 );
+		wp_cache_set( $cache_key, $unused_presets, 'bpmgr_statistics', 900 );
 	}
 
 	return $unused_presets;
@@ -325,13 +325,13 @@ function gbp_get_unused_presets_cached() {
 /**
  * Get recent usage with caching
  */
-function gbp_get_recent_usage_cached() {
-	$cache_key    = 'gbp_recent_usage';
-	$recent_usage = wp_cache_get( $cache_key, 'gbp_statistics' );
+function bpmgr_get_recent_usage_cached() {
+	$cache_key    = 'bpmgr_recent_usage';
+	$recent_usage = wp_cache_get( $cache_key, 'bpmgr_statistics' );
 
 	if ( false === $recent_usage ) {
 		global $wpdb;
-		$table_name   = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifiers only, see comment above.
 		$recent_usage = $wpdb->get_results(
@@ -347,7 +347,7 @@ function gbp_get_recent_usage_cached() {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Cache for 5 minutes
-		wp_cache_set( $cache_key, $recent_usage, 'gbp_statistics', 300 );
+		wp_cache_set( $cache_key, $recent_usage, 'bpmgr_statistics', 300 );
 	}
 
 	return $recent_usage;
@@ -356,13 +356,13 @@ function gbp_get_recent_usage_cached() {
 /**
  * Get monthly usage trends with caching
  */
-function gbp_get_monthly_usage_cached() {
-	$cache_key     = 'gbp_monthly_usage';
-	$monthly_usage = wp_cache_get( $cache_key, 'gbp_statistics' );
+function bpmgr_get_monthly_usage_cached() {
+	$cache_key     = 'bpmgr_monthly_usage';
+	$monthly_usage = wp_cache_get( $cache_key, 'bpmgr_statistics' );
 
 	if ( false === $monthly_usage ) {
 		global $wpdb;
-		$table_name    = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifiers only, see comment above.
 		$monthly_usage = $wpdb->get_results(
@@ -377,7 +377,7 @@ function gbp_get_monthly_usage_cached() {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Cache for 1 hour
-		wp_cache_set( $cache_key, $monthly_usage, 'gbp_statistics', 3600 );
+		wp_cache_set( $cache_key, $monthly_usage, 'bpmgr_statistics', 3600 );
 	}
 
 	return $monthly_usage;
@@ -386,11 +386,11 @@ function gbp_get_monthly_usage_cached() {
 /**
  * Clear statistics cache when usage data is updated
  */
-function gbp_clear_statistics_cache() {
-	wp_cache_delete( 'gbp_total_usage', 'gbp_statistics' );
-	wp_cache_delete( 'gbp_most_used_presets', 'gbp_statistics' );
-	wp_cache_delete( 'gbp_unused_presets', 'gbp_statistics' );
-	wp_cache_delete( 'gbp_recent_usage', 'gbp_statistics' );
-	wp_cache_delete( 'gbp_monthly_usage', 'gbp_statistics' );
+function bpmgr_clear_statistics_cache() {
+	wp_cache_delete( 'bpmgr_total_usage', 'bpmgr_statistics' );
+	wp_cache_delete( 'bpmgr_most_used_presets', 'bpmgr_statistics' );
+	wp_cache_delete( 'bpmgr_unused_presets', 'bpmgr_statistics' );
+	wp_cache_delete( 'bpmgr_recent_usage', 'bpmgr_statistics' );
+	wp_cache_delete( 'bpmgr_monthly_usage', 'bpmgr_statistics' );
 }
 ?>

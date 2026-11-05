@@ -3,11 +3,11 @@
  * Helper functions for the Tools admin screen (migration, usage reset, export)
  *
  * Loaded unconditionally alongside the plugin's other dependencies (not only when the
- * Tools page itself renders) so gbp_export_presets() is available to GBP_Admin's
+ * Tools page itself renders) so bpmgr_export_presets() is available to BPMGR_Admin's
  * admin_init handler, which must run - and may need to send file-download headers -
  * before the Tools page template ever outputs any HTML.
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  * @since 1.0.0
  */
 
@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Migrate legacy "block" post type entries to the gbp_block_preset post type
+ * Migrate legacy "block" post type entries to the bpmgr_block_preset post type
  *
  * @return int Number of block presets migrated.
  */
-function gbp_migrate_old_blocks() {
+function bpmgr_migrate_old_blocks() {
 	$old_blocks = get_posts(
 		array(
 			'post_type'      => 'block',
@@ -38,7 +38,7 @@ function gbp_migrate_old_blocks() {
 			'post_content' => $old_block->post_content,
 			'post_excerpt' => $old_block->post_excerpt,
 			'post_status'  => $old_block->post_status,
-			'post_type'    => 'gbp_block_preset',
+			'post_type'    => 'bpmgr_block_preset',
 			'post_author'  => $old_block->post_author,
 			'post_date'    => $old_block->post_date,
 		);
@@ -65,8 +65,8 @@ function gbp_migrate_old_blocks() {
 			}
 
 			// Set migration flag.
-			update_post_meta( $new_post_id, '_gbp_migrated_from', $old_block->ID );
-			update_post_meta( $new_post_id, '_gbp_block_type', 'migrated' );
+			update_post_meta( $new_post_id, '_bpmgr_migrated_from', $old_block->ID );
+			update_post_meta( $new_post_id, '_bpmgr_block_type', 'migrated' );
 
 			++$migrated;
 		}
@@ -80,11 +80,11 @@ function gbp_migrate_old_blocks() {
  *
  * @return bool True on success, false on failure.
  */
-function gbp_reset_usage_stats() {
+function bpmgr_reset_usage_stats() {
 	global $wpdb;
 	// Table name is built from $wpdb->prefix (not user input), so it is safe to interpolate;
 	// $wpdb->prepare() does not support table/column identifiers as placeholders.
-	$table_name = $wpdb->prefix . 'gbp_block_usage';
+	$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 	return false !== $wpdb->query( "TRUNCATE TABLE $table_name" );
 }
@@ -94,10 +94,10 @@ function gbp_reset_usage_stats() {
  *
  * @return array|false Export data, or false if there are no presets to export.
  */
-function gbp_export_presets() {
+function bpmgr_export_presets() {
 	$presets = get_posts(
 		array(
-			'post_type'      => 'gbp_block_preset',
+			'post_type'      => 'bpmgr_block_preset',
 			'posts_per_page' => -1,
 			'post_status'    => 'any',
 		)
@@ -108,7 +108,7 @@ function gbp_export_presets() {
 	}
 
 	$export_data = array(
-		'version'     => GBP_VERSION,
+		'version'     => BPMGR_VERSION,
 		'export_date' => current_time( 'mysql' ),
 		'presets'     => array(),
 	);
@@ -120,8 +120,8 @@ function gbp_export_presets() {
 			'excerpt'    => $preset->post_excerpt,
 			'status'     => $preset->post_status,
 			'meta'       => get_post_meta( $preset->ID ),
-			'categories' => wp_get_post_terms( $preset->ID, 'gbp_block_category' ),
-			'tags'       => wp_get_post_terms( $preset->ID, 'gbp_block_tag' ),
+			'categories' => wp_get_post_terms( $preset->ID, 'bpmgr_block_category' ),
+			'tags'       => wp_get_post_terms( $preset->ID, 'bpmgr_block_tag' ),
 		);
 
 		$export_data['presets'][] = $preset_data;

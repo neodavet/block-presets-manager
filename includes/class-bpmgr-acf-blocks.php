@@ -2,7 +2,7 @@
 /**
  * Handle ACF Blocks Registration and Management
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  * @since 1.0.0
  */
 
@@ -14,12 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * ACF Blocks Class
  */
-class GBP_ACF_Blocks {
+class BPMGR_ACF_Blocks {
 
 	/**
 	 * Instance of this class
 	 *
-	 * @var GBP_ACF_Blocks
+	 * @var BPMGR_ACF_Blocks
 	 */
 	private static $instance = null;
 
@@ -45,7 +45,7 @@ class GBP_ACF_Blocks {
 	 */
 	private function __construct() {
 		// Only initialize ACF features if enabled in settings
-		$settings    = get_option( 'gbp_settings', array() );
+		$settings    = get_option( 'bpmgr_settings', array() );
 		$acf_enabled = isset( $settings['enable_acf_blocks'] ) ? $settings['enable_acf_blocks'] : false;
 
 		if ( $acf_enabled ) {
@@ -61,7 +61,7 @@ class GBP_ACF_Blocks {
 	 * Set block folders from settings
 	 */
 	private function set_block_folders() {
-		$settings = get_option( 'gbp_settings', array() );
+		$settings = get_option( 'bpmgr_settings', array() );
 
 		$default_folders = array(
 			'general/acf-blocks',
@@ -86,7 +86,7 @@ class GBP_ACF_Blocks {
 	 */
 	public function acf_init() {
 		// Check if ACF is active and ACF blocks are enabled in settings
-		$settings    = get_option( 'gbp_settings', array() );
+		$settings    = get_option( 'bpmgr_settings', array() );
 		$acf_enabled = isset( $settings['enable_acf_blocks'] ) ? $settings['enable_acf_blocks'] : true;
 
 		if ( ! function_exists( 'acf_register_block' ) || ! $acf_enabled ) {
@@ -115,8 +115,8 @@ class GBP_ACF_Blocks {
 					$categories,
 					array(
 						array(
-							'slug'  => 'gbp-custom-blocks',
-							'title' => __( 'Custom ACF Blocks', 'gutenberg-blocks-presets' ),
+							'slug'  => 'bpmgr-custom-blocks',
+							'title' => __( 'Custom ACF Blocks', 'block-presets-manager' ),
 							'icon'  => 'block-default',
 						),
 					)
@@ -194,7 +194,7 @@ class GBP_ACF_Blocks {
 		// Set defaults
 		$block_data['title']       = $block_data['title'] ? $block_data['title'] : ucwords( str_replace( '-', ' ', $name ) );
 		$block_data['description'] = $block_data['description'] ? $block_data['description'] : $block_data['title'];
-		$block_data['category']    = $block_data['category'] ? $block_data['category'] : 'gbp-custom-blocks';
+		$block_data['category']    = $block_data['category'] ? $block_data['category'] : 'bpmgr-custom-blocks';
 		$block_data['icon']        = $block_data['icon'] ? $block_data['icon'] : 'block-default';
 		$block_data['mode']        = $block_data['mode'] ? $block_data['mode'] : 'auto';
 
@@ -267,8 +267,8 @@ class GBP_ACF_Blocks {
 
 		if ( $template_file && file_exists( $template_file ) ) {
 			// Set up block variables for template
-			$block_id   = 'gbp-block-' . $block_slug . '-' . uniqid();
-			$class_name = 'gbp-block gbp-block-' . $block_slug;
+			$block_id   = 'bpmgr-block-' . $block_slug . '-' . uniqid();
+			$class_name = 'bpmgr-block bpmgr-block-' . $block_slug;
 
 			// className/align come from the block editor (user-editable post content), so
 			// sanitize them as HTML class tokens before templates echo $class_name directly.
@@ -284,11 +284,11 @@ class GBP_ACF_Blocks {
 			// Include the template
 			include $template_file;
 		} else {
-			echo '<div class="gbp-block-error">';
+			echo '<div class="bpmgr-block-error">';
 			echo esc_html(
 				sprintf(
 					/* translators: %s: Block slug. */
-					__( 'Block template not found: %s', 'gutenberg-blocks-presets' ),
+					__( 'Block template not found: %s', 'block-presets-manager' ),
 					$block_slug
 				)
 			);
@@ -335,7 +335,7 @@ class GBP_ACF_Blocks {
 			)
 		);
 
-		$handle = 'gbp-block-' . $block_slug;
+		$handle = 'bpmgr-block-' . $block_slug;
 
 		// Enqueue styles
 		if ( $this->parse_bool_setting( $asset_data['enqueue_style'], true ) ) {
@@ -399,9 +399,9 @@ class GBP_ACF_Blocks {
 		?>
 		<div class="notice notice-warning is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'Gutenberg Blocks Presets:', 'gutenberg-blocks-presets' ); ?></strong>
-				<?php esc_html_e( 'Advanced Custom Fields Pro is required for automatic ACF blocks registration. You can still use Block Presets without ACF.', 'gutenberg-blocks-presets' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=gbp_block_preset&page=gbp-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'gutenberg-blocks-presets' ); ?></a>
+				<strong><?php esc_html_e( 'Block Presets Manager:', 'block-presets-manager' ); ?></strong>
+				<?php esc_html_e( 'Advanced Custom Fields Pro is required for automatic ACF blocks registration. You can still use Block Presets without ACF.', 'block-presets-manager' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'block-presets-manager' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -413,15 +413,15 @@ class GBP_ACF_Blocks {
 	public function acf_disabled_notice() {
 		// Only show on plugin pages
 		$screen = get_current_screen();
-		if ( ! $screen || false === strpos( $screen->id, 'gbp' ) ) {
+		if ( ! $screen || false === strpos( $screen->id, 'bpmgr' ) ) {
 			return;
 		}
 		?>
 		<div class="notice notice-info is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'ACF Features Disabled:', 'gutenberg-blocks-presets' ); ?></strong>
-				<?php esc_html_e( 'Automatic ACF blocks registration is currently disabled. The plugin works with native WordPress functionality.', 'gutenberg-blocks-presets' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=gbp_block_preset&page=gbp-settings' ) ); ?>"><?php esc_html_e( 'Enable ACF features', 'gutenberg-blocks-presets' ); ?></a>
+				<strong><?php esc_html_e( 'ACF Features Disabled:', 'block-presets-manager' ); ?></strong>
+				<?php esc_html_e( 'Automatic ACF blocks registration is currently disabled. The plugin works with native WordPress functionality.', 'block-presets-manager' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Enable ACF features', 'block-presets-manager' ); ?></a>
 			</p>
 		</div>
 		<?php

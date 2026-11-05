@@ -1,8 +1,8 @@
 <?php
 /**
- * Gutenberg Blocks for Gutenberg Blocks Presets
+ * Gutenberg Blocks for Block Presets Manager
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  */
 
 // Prevent direct access
@@ -13,12 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Native Gutenberg Block Class
  */
-class GBP_Gutenberg_Blocks {
+class BPMGR_Gutenberg_Blocks {
 
 	/**
 	 * Instance of this class
 	 *
-	 * @var GBP_Gutenberg_Blocks
+	 * @var BPMGR_Gutenberg_Blocks
 	 */
 	private static $instance = null;
 
@@ -40,12 +40,12 @@ class GBP_Gutenberg_Blocks {
 	}
 
 	/**
-	 * Register the editor script and the native "gbp/block-preset" block type
+	 * Register the editor script and the native "bpmgr/block-preset" block type
 	 */
 	public function register_assets_and_block() {
 		// Register editor script
-		$handle = 'gbp-block-preset-editor';
-		$src    = GBP_PLUGIN_URL . 'assets/js/block-preset.js';
+		$handle = 'bpmgr-block-preset-editor';
+		$src    = BPMGR_PLUGIN_URL . 'assets/js/block-preset.js';
 		$deps   = array(
 			'wp-blocks',
 			'wp-element',
@@ -57,15 +57,15 @@ class GBP_Gutenberg_Blocks {
 			'wp-api-fetch',
 		);
 
-		wp_register_script( $handle, $src, $deps, GBP_VERSION, true );
+		wp_register_script( $handle, $src, $deps, BPMGR_VERSION, true );
 
 		// Without this, the wp.i18n.__() calls in block-preset.js have no translation
 		// catalog to draw from and always render the English source strings.
-		wp_set_script_translations( $handle, 'gutenberg-blocks-presets', GBP_PLUGIN_DIR . 'languages' );
+		wp_set_script_translations( $handle, 'block-presets-manager', BPMGR_PLUGIN_DIR . 'languages' );
 
 		// Register block type (dynamic)
 		register_block_type(
-			'gbp/block-preset',
+			'bpmgr/block-preset',
 			array(
 				'editor_script'   => $handle,
 				'render_callback' => array( $this, 'render_block_preset' ),
@@ -110,7 +110,7 @@ class GBP_Gutenberg_Blocks {
 	}
 
 	/**
-	 * Render callback for the "gbp/block-preset" dynamic block
+	 * Render callback for the "bpmgr/block-preset" dynamic block
 	 *
 	 * @param array  $attributes Block attributes.
 	 * @param string $content Block inner content (unused; the block has no inner blocks).
@@ -123,17 +123,17 @@ class GBP_Gutenberg_Blocks {
 		$align      = isset( $attributes['align'] ) ? sanitize_html_class( $attributes['align'] ) : '';
 
 		if ( ! $preset_id ) {
-			return $this->render_notice( __( 'No Block Preset selected.', 'gutenberg-blocks-presets' ) );
+			return $this->render_notice( __( 'No Block Preset selected.', 'block-presets-manager' ) );
 		}
 
 		$post        = get_post( $preset_id );
 		$can_preview = is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_preview();
-		if ( ! $post || 'gbp_block_preset' !== $post->post_type || ( 'publish' !== $post->post_status && ! $can_preview ) ) {
-			return $this->render_notice( __( 'This block references a Block Preset that is missing or unavailable. Edits to a Block Preset affect all posts and pages using it.', 'gutenberg-blocks-presets' ) );
+		if ( ! $post || 'bpmgr_block_preset' !== $post->post_type || ( 'publish' !== $post->post_status && ! $can_preview ) ) {
+			return $this->render_notice( __( 'This block references a Block Preset that is missing or unavailable. Edits to a Block Preset affect all posts and pages using it.', 'block-presets-manager' ) );
 		}
 
 		// Build wrapper classes
-		$classes = array( 'wp-block-gbp-block-preset' );
+		$classes = array( 'wp-block-bpmgr-block-preset' );
 		if ( ! empty( $class_name ) ) {
 			$classes[] = $class_name;
 		}
@@ -145,11 +145,11 @@ class GBP_Gutenberg_Blocks {
 		// to process blocks and shortcodes the same way normal post content is rendered.
 		$rendered_content = apply_filters( 'the_content', $post->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-		$html = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" data-gbp-preset-id="' . esc_attr( $preset_id ) . '">';
+		$html = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" data-bpmgr-preset-id="' . esc_attr( $preset_id ) . '">';
 		if ( $show_title ) {
-			$html .= '<div class="gbp-preset-title">' . esc_html( get_the_title( $post ) ) . '</div>';
+			$html .= '<div class="bpmgr-preset-title">' . esc_html( get_the_title( $post ) ) . '</div>';
 		}
-		$html .= '<div class="gbp-preset-content">' . $rendered_content . '</div>';
+		$html .= '<div class="bpmgr-preset-content">' . $rendered_content . '</div>';
 		$html .= '</div>';
 
 		return $html;
@@ -162,6 +162,6 @@ class GBP_Gutenberg_Blocks {
 	 * @return string Notice HTML.
 	 */
 	private function render_notice( $message ) {
-		return '<div class="gbp-preset-notice" role="note">' . esc_html( $message ) . '</div>';
+		return '<div class="bpmgr-preset-notice" role="note">' . esc_html( $message ) . '</div>';
 	}
 }

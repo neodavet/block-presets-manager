@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Gutenberg Blocks Presets
+ * Plugin Name: Block Presets Manager
  * Plugin URI: https://neodavet.github.io/davetportfolio/
  * Description: A powerful plugin for creating and managing reusable Gutenberg block presets. Allows you to create custom block templates and ACF blocks that can be reused across your website.
  * Version: 1.0.1
  * Author: davet86
  * Author URI: https://neodavet.github.io/davetportfolio/
- * Text Domain: gutenberg-blocks-presets
+ * Text Domain: block-presets-manager
  * Domain Path: /languages
  * Requires at least: 5.9
  * Tested up to: 7.1
@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2026 David Tavares
  *
- * @package Gutenberg_Blocks_Presets
+ * @package Block_Presets_Manager
  */
 
 // Prevent direct access
@@ -25,22 +25,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'GBP_VERSION', '1.0.1' );
-define( 'GBP_PLUGIN_FILE', __FILE__ );
-define( 'GBP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GBP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'GBP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'GBP_TEXT_DOMAIN', 'gutenberg-blocks-presets' );
+define( 'BPMGR_VERSION', '1.0.1' );
+define( 'BPMGR_PLUGIN_FILE', __FILE__ );
+define( 'BPMGR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'BPMGR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'BPMGR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( 'BPMGR_TEXT_DOMAIN', 'block-presets-manager' );
 
 /**
  * Main Plugin Class
  */
-class Gutenberg_Blocks_Presets {
+class Block_Presets_Manager {
 
 	/**
 	 * Plugin instance
 	 *
-	 * @var Gutenberg_Blocks_Presets
+	 * @var Block_Presets_Manager
 	 */
 	private static $instance = null;
 
@@ -63,11 +63,11 @@ class Gutenberg_Blocks_Presets {
 
 		// Ensure core components are instantiated before 'init' fires,
 		// so their own 'init' callbacks (e.g., CPT registration) are hooked in time.
-		if ( class_exists( 'GBP_Post_Types' ) ) {
-			GBP_Post_Types::get_instance();
+		if ( class_exists( 'BPMGR_Post_Types' ) ) {
+			BPMGR_Post_Types::get_instance();
 		}
-		if ( class_exists( 'GBP_Gutenberg_Blocks' ) ) {
-			GBP_Gutenberg_Blocks::get_instance();
+		if ( class_exists( 'BPMGR_Gutenberg_Blocks' ) ) {
+			BPMGR_Gutenberg_Blocks::get_instance();
 		}
 	}
 
@@ -80,8 +80,8 @@ class Gutenberg_Blocks_Presets {
 
 		// Admin hooks
 		// Note: the admin menu, settings registration, and settings sanitization are all
-		// owned by GBP_Admin (see includes/class-gbp-admin.php) - registering them here too
-		// used to create a duplicate, conflicting registration of the 'gbp_settings' option.
+		// owned by BPMGR_Admin (see includes/class-bpmgr-admin.php) - registering them here too
+		// used to create a duplicate, conflicting registration of the 'bpmgr_settings' option.
 		if ( is_admin() ) {
 			// Register privacy policy content
 			add_action( 'admin_init', array( $this, 'add_privacy_policy_content' ) );
@@ -92,12 +92,12 @@ class Gutenberg_Blocks_Presets {
 	 * Load plugin dependencies
 	 */
 	private function load_dependencies() {
-		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-post-types.php';
-		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-acf-blocks.php';
-		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-helper-functions.php';
-		require_once GBP_PLUGIN_DIR . 'includes/gbp-tools-functions.php';
-		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-admin.php';
-		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-gutenberg-blocks.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/class-bpmgr-post-types.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/class-bpmgr-acf-blocks.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/class-bpmgr-helper-functions.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/bpmgr-tools-functions.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/class-bpmgr-admin.php';
+		require_once BPMGR_PLUGIN_DIR . 'includes/class-bpmgr-gutenberg-blocks.php';
 	}
 
 	/**
@@ -105,36 +105,36 @@ class Gutenberg_Blocks_Presets {
 	 */
 	public function init() {
 		// Log that plugin is initializing (no-op unless debug logging is enabled).
-		GBP_Helper_Functions::log( 'Initializing plugin components' );
+		BPMGR_Helper_Functions::log( 'Initializing plugin components' );
 
 		// Initialize components
-		GBP_Post_Types::get_instance();
-		GBP_ACF_Blocks::get_instance();
-		GBP_Helper_Functions::get_instance();
-		GBP_Gutenberg_Blocks::get_instance();
+		BPMGR_Post_Types::get_instance();
+		BPMGR_ACF_Blocks::get_instance();
+		BPMGR_Helper_Functions::get_instance();
+		BPMGR_Gutenberg_Blocks::get_instance();
 
 		if ( is_admin() ) {
-			GBP_Admin::get_instance();
+			BPMGR_Admin::get_instance();
 		}
 
 		// Add admin notice for successful activation
-		if ( is_admin() && get_transient( 'gbp_activation_notice' ) ) {
+		if ( is_admin() && get_transient( 'bpmgr_activation_notice' ) ) {
 			add_action( 'admin_notices', array( $this, 'activation_notice' ) );
-			delete_transient( 'gbp_activation_notice' );
+			delete_transient( 'bpmgr_activation_notice' );
 		}
 
 		// Log whether the post type was registered (no-op unless debug logging is enabled).
 		add_action(
 			'wp_loaded',
 			function () {
-				if ( ! GBP_Helper_Functions::is_debug_enabled() ) {
+				if ( ! BPMGR_Helper_Functions::is_debug_enabled() ) {
 					return;
 				}
-				$exists = post_type_exists( 'gbp_block_preset' );
-				GBP_Helper_Functions::log( 'Post type gbp_block_preset exists: ' . ( $exists ? 'YES' : 'NO' ) );
+				$exists = post_type_exists( 'bpmgr_block_preset' );
+				BPMGR_Helper_Functions::log( 'Post type bpmgr_block_preset exists: ' . ( $exists ? 'YES' : 'NO' ) );
 				if ( $exists ) {
-					$post_type_obj = get_post_type_object( 'gbp_block_preset' );
-					GBP_Helper_Functions::log( $post_type_obj->labels );
+					$post_type_obj = get_post_type_object( 'bpmgr_block_preset' );
+					BPMGR_Helper_Functions::log( $post_type_obj->labels );
 				}
 			}
 		);
@@ -145,12 +145,12 @@ class Gutenberg_Blocks_Presets {
 	 */
 	public function add_privacy_policy_content() {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			$content  = '<p>' . esc_html__( 'Gutenberg Blocks Presets stores minimal data locally to provide its functionality.', 'gutenberg-blocks-presets' ) . '</p>';
-			$content .= '<p>' . esc_html__( 'Specifically, it creates a local database table to track where a block preset is used: block ID, post ID, usage count, and last used date. No personal data is collected by this feature, and no data is transmitted to third parties.', 'gutenberg-blocks-presets' ) . '</p>';
-			$content .= '<p>' . esc_html__( 'If you uninstall the plugin from the Plugins screen, all plugin data (including this usage table, options, and related metadata) will be removed.', 'gutenberg-blocks-presets' ) . '</p>';
+			$content  = '<p>' . esc_html__( 'Block Presets Manager stores minimal data locally to provide its functionality.', 'block-presets-manager' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'Specifically, it creates a local database table to track where a block preset is used: block ID, post ID, usage count, and last used date. No personal data is collected by this feature, and no data is transmitted to third parties.', 'block-presets-manager' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'If you uninstall the plugin from the Plugins screen, all plugin data (including this usage table, options, and related metadata) will be removed.', 'block-presets-manager' ) . '</p>';
 
 			wp_add_privacy_policy_content(
-				__( 'Gutenberg Blocks Presets', 'gutenberg-blocks-presets' ),
+				__( 'Block Presets Manager', 'block-presets-manager' ),
 				wp_kses_post( $content )
 			);
 		}
@@ -164,7 +164,7 @@ class Gutenberg_Blocks_Presets {
 		flush_rewrite_rules();
 
 		// Set default options
-		if ( ! get_option( 'gbp_settings' ) ) {
+		if ( ! get_option( 'bpmgr_settings' ) ) {
 			$default_settings = array(
 				'enable_acf_blocks'       => false, // Disabled by default - purely native WordPress.
 				'enable_block_presets'    => true,
@@ -176,14 +176,14 @@ class Gutenberg_Blocks_Presets {
 					'members/acf-blocks',
 				),
 			);
-			update_option( 'gbp_settings', $default_settings );
+			update_option( 'bpmgr_settings', $default_settings );
 		}
 
 		// Create custom tables if needed
 		$this->create_custom_tables();
 
 		// Set activation notice
-		set_transient( 'gbp_activation_notice', true, 30 );
+		set_transient( 'bpmgr_activation_notice', true, 30 );
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Gutenberg_Blocks_Presets {
 
 		// Table name is built from $wpdb->prefix (not user input), so it is safe to interpolate;
 		// $wpdb->prepare() does not support table/column identifiers as placeholders.
-		$table_name = $wpdb->prefix . 'gbp_block_usage';
+		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = "CREATE TABLE $table_name (
@@ -229,11 +229,11 @@ class Gutenberg_Blocks_Presets {
 		?>
 		<div class="notice notice-success is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'Gutenberg Blocks Presets activated successfully!', 'gutenberg-blocks-presets' ); ?></strong>
-				<?php esc_html_e( 'You can now manage your block presets from the', 'gutenberg-blocks-presets' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=gbp_block_preset' ) ); ?>"><strong><?php esc_html_e( 'Block Presets', 'gutenberg-blocks-presets' ); ?></strong></a>
-				<?php esc_html_e( 'menu.', 'gutenberg-blocks-presets' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=gbp_block_preset&page=gbp-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'gutenberg-blocks-presets' ); ?></a>
+				<strong><?php esc_html_e( 'Block Presets Manager activated successfully!', 'block-presets-manager' ); ?></strong>
+				<?php esc_html_e( 'You can now manage your block presets from the', 'block-presets-manager' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset' ) ); ?>"><strong><?php esc_html_e( 'Block Presets', 'block-presets-manager' ); ?></strong></a>
+				<?php esc_html_e( 'menu.', 'block-presets-manager' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'block-presets-manager' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -264,14 +264,14 @@ class Gutenberg_Blocks_Presets {
 // Activation and deactivation hooks must be registered unconditionally, every time this file
 // loads - not deferred behind 'plugins_loaded' - otherwise WordPress won't see them in time
 // when it fires the activation/deactivation hooks.
-register_activation_hook( GBP_PLUGIN_FILE, array( 'Gutenberg_Blocks_Presets', 'run_activation' ) );
-register_deactivation_hook( GBP_PLUGIN_FILE, array( 'Gutenberg_Blocks_Presets', 'run_deactivation' ) );
+register_activation_hook( BPMGR_PLUGIN_FILE, array( 'Block_Presets_Manager', 'run_activation' ) );
+register_deactivation_hook( BPMGR_PLUGIN_FILE, array( 'Block_Presets_Manager', 'run_deactivation' ) );
 
 // Start the plugin after all plugins are loaded
 add_action(
 	'plugins_loaded',
 	static function () {
-		Gutenberg_Blocks_Presets::get_instance();
+		Block_Presets_Manager::get_instance();
 	},
 	10
 );

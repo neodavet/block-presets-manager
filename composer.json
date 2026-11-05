@@ -1,6 +1,6 @@
 {
-	"name": "local/gutenberg-blocks-presets",
-	"description": "Gutenberg Blocks Presets WordPress plugin",
+	"name": "local/block-presets-manager",
+	"description": "Block Presets Manager WordPress plugin",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"require": {
