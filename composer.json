@@ -1,0 +1,30 @@
+{
+	"name": "local/gutenberg-blocks-presets",
+	"description": "Gutenberg Blocks Presets WordPress plugin",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=7.4"
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"lint:fix": "phpcbf",
+		"build": "php bin/build-zip.php",
+		"plugin-check": "bash bin/plugin-check.sh",
+		"release-check": [
+			"@lint",
+			"@build",
+			"@plugin-check"
+		]
+	}
+}

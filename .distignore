@@ -1,0 +1,29 @@
+# Files excluded from the wordpress.org zip (same syntax as the wp.org deploy action).
+# Directories end with "/", a leading "/" anchors to the plugin root.
+/.git/
+/.github/
+/.cursor/
+/.claude/
+/.idea/
+/.vscode/
+/node_modules/
+/vendor/
+/dist/
+/bin/
+/tests/
+/.gitignore
+/.gitattributes
+/.distignore
+/.editorconfig
+/composer.json
+/composer.lock
+/phpcs.xml.dist
+/phpunit.xml.dist
+/package.json
+/package-lock.json
+/CLAUDE.md
+/README.md
+/RELEASE_NOTES.md
+*.log
+.DS_Store
+Thumbs.db
