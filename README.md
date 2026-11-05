@@ -6,7 +6,7 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 - Plugin URI: https://neodavet.github.io/davetportfolio/
 - License: GPL v2 or later
 - Requires: WordPress 5.9+, PHP 7.4+
-- Tested up to: WordPress 6.6
+- Tested up to: WordPress 7.1
 
 ## Key Features
 - Native custom post type for presets: `gbp_block_preset`

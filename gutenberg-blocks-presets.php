@@ -9,7 +9,7 @@
  * Text Domain: gutenberg-blocks-presets
  * Domain Path: /languages
  * Requires at least: 5.9
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * Requires PHP: 7.4
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -77,7 +77,6 @@ class Gutenberg_Blocks_Presets {
 	private function init_hooks() {
 		// Initialize plugin
 		add_action( 'init', array( $this, 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
 		// Admin hooks
 		// Note: the admin menu, settings registration, and settings sanitization are all
@@ -99,13 +98,6 @@ class Gutenberg_Blocks_Presets {
 		require_once GBP_PLUGIN_DIR . 'includes/gbp-tools-functions.php';
 		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-admin.php';
 		require_once GBP_PLUGIN_DIR . 'includes/class-gbp-gutenberg-blocks.php';
-	}
-
-	/**
-	 * Load the plugin text domain for translations
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( 'gutenberg-blocks-presets', false, dirname( GBP_PLUGIN_BASENAME ) . '/languages' );
 	}
 
 	/**
