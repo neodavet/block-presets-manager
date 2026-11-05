@@ -5,11 +5,14 @@
 	<file>.</file>
 	<exclude-pattern>/languages/*</exclude-pattern>
 	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/bin/*</exclude-pattern>
+	<exclude-pattern>/dist/*</exclude-pattern>
 	<exclude-pattern>/node_modules/*</exclude-pattern>
 
 	<arg value="sp"/>
 	<arg name="basepath" value="."/>
 	<arg name="colors"/>
+	<config name="ignore_warnings_on_exit" value="1"/>
 	<arg name="extensions" value="php"/>
 
 	<rule ref="WordPress">
