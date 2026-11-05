@@ -82,7 +82,8 @@ var GBP_Admin = {
         $('.gbp-help-tip').on('mouseenter', function() {
             var tip = $(this).data('tip');
             if (tip) {
-                $('<div class="gbp-tooltip">' + tip + '</div>')
+                $('<div class="gbp-tooltip"></div>')
+                    .text(tip)
                     .appendTo('body')
                     .fadeIn('fast');
             }
@@ -186,7 +187,7 @@ var GBP_BlockPresets = {
                 }
             },
             error: function() {
-                $('#gbp-preview-container').html('<p class="error">Preview failed to load.</p>');
+                $('#gbp-preview-container').html('<p class="error">' + (gbp_admin.strings.preview_failed || 'Preview failed to load.') + '</p>');
             }
         });
     },
@@ -211,7 +212,7 @@ var GBP_BlockPresets = {
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data || 'Duplication failed.');
+                    alert(response.data || gbp_admin.strings.duplication_failed || 'Duplication failed.');
                 }
             }
         });
