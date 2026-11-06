@@ -3,13 +3,12 @@
  * Plugin Name: Block Presets Manager
  * Plugin URI: https://github.com/neodavet/block-presets-manager
  * Description: A powerful plugin for creating and managing reusable Gutenberg block presets. Allows you to create custom block templates and ACF blocks that can be reused across your website.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: David Tavares Cuevas
  * Author URI: https://neodavet.github.io/davetportfolio/
  * Text Domain: block-presets-manager
  * Domain Path: /languages
  * Requires at least: 5.9
- * Tested up to: 7.1
  * Requires PHP: 7.4
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'BPMGR_VERSION', '1.0.4' );
+define( 'BPMGR_VERSION', '1.0.5' );
 define( 'BPMGR_PLUGIN_FILE', __FILE__ );
 define( 'BPMGR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BPMGR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
