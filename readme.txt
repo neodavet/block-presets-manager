@@ -1,10 +1,10 @@
 === Block Presets Manager ===
-Contributors: davet86
+Contributors: davet86, alkesh7
 Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Text Domain: block-presets-manager
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -95,15 +95,10 @@ Yes, block presets work within the Gutenberg editor and are compatible with most
 
 Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to specify which theme folders should be scanned for ACF blocks.
 
-== Screenshots ==
-1. Block Presets admin interface
-2. Settings page with configuration options
-3. Usage statistics dashboard
-4. Migration tools interface
-5. Block preset editor with meta boxes
-6. ACF blocks integration
-
 == Changelog ==
+
+= 1.0.5 =
+* Removed "Tested up to" from the plugin header; it is now declared only in readme.txt, as WordPress.org requires
 
 = 1.0.4 =
 * Changed: the plugin author is now listed as David Tavares Cuevas
@@ -151,6 +146,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 * Comprehensive uninstall cleanup
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Removes the "Tested up to" line from the plugin header. No functional changes.
 
 = 1.0.4 =
 Updates the plugin author name and Plugin URI. No functional changes.
