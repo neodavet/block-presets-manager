@@ -5,6 +5,9 @@
  * @since 1.0.0
  */
 
+(function($) {
+    'use strict';
+
 jQuery(document).ready(function($) {
     'use strict';
 
@@ -264,3 +267,5 @@ var BPMGR_Utils = {
         };
     }
 };
+
+})(jQuery);
