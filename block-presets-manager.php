@@ -160,7 +160,10 @@ class Block_Presets_Manager {
 	 * Plugin activation
 	 */
 	public function activate() {
-		// Flush rewrite rules
+		// The post types are normally registered on 'init', which has already run by the time the
+		// activation hook fires. Register them now so the flushed rewrite rules include their URLs;
+		// otherwise single preset pages return 404 until the rules are flushed again.
+		BPMGR_Post_Types::get_instance()->register_post_types();
 		flush_rewrite_rules();
 
 		// Set default options
