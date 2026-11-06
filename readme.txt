@@ -4,7 +4,7 @@ Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Text Domain: block-presets-manager
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,12 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 
 == Changelog ==
 
+= 1.0.2 =
+* Renamed the plugin to Block Presets Manager (slug `block-presets-manager`) and changed the internal code prefix to `bpmgr`
+* Fix: resolved a fatal error on the Tools page caused by a duplicated function and form handler
+* Removed the manual `load_plugin_textdomain()` call (translations are loaded automatically by WordPress.org)
+* Updated "Tested up to" to WordPress 7.1
+
 = 1.0.1 =
 * Security: REST API endpoint for a single block preset no longer exposes draft/private/trashed presets to unauthenticated requests
 * Security: removed a duplicate, conflicting registration of the plugin settings that had silently dropped path-safety validation on the ACF block folders setting
@@ -133,6 +139,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 * Comprehensive uninstall cleanup
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Fixes a fatal error on the Tools page and renames the plugin to Block Presets Manager.
 
 = 1.0.1 =
 Security and stability update: fixes two fatal-error bugs and closes a settings-validation gap. Upgrade is recommended for all users.
