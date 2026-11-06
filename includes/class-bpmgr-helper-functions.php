@@ -324,6 +324,7 @@ class BPMGR_Helper_Functions {
 
 		if ( $existing ) {
 			// Update existing record
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- write to the plugin's own usage table; caching a write is not applicable.
 			$wpdb->update(
 				$table_name,
 				array(
@@ -338,6 +339,7 @@ class BPMGR_Helper_Functions {
 			);
 		} else {
 			// Insert new record
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- write to the plugin's own usage table; no WordPress API exists for custom tables.
 			$wpdb->insert(
 				$table_name,
 				array(
@@ -403,6 +405,7 @@ class BPMGR_Helper_Functions {
 		$args = array();
 
 		if ( $request->get_param( 'category' ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- optional filter requested by the API client; the result set is small and limited.
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'bpmgr_block_category',
@@ -413,6 +416,7 @@ class BPMGR_Helper_Functions {
 		}
 
 		if ( $request->get_param( 'tag' ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- optional filter requested by the API client; the result set is small and limited.
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'bpmgr_block_tag',

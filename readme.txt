@@ -110,6 +110,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 * Fix: resolved a fatal error on the Tools page caused by a duplicated function and form handler
 * Removed the manual `load_plugin_textdomain()` call (translations are loaded automatically by WordPress.org)
 * Updated "Tested up to" to WordPress 7.1
+* New: "Duplicate" row action in the Block Presets list (creates a draft copy including categories, tags and custom fields)
+* New: secure AJAX handlers for duplicating and previewing presets (nonce and capability checks)
+* Code quality: cleared all remaining Plugin Check warnings (documented direct queries on the plugin's own table, unused callback parameters, JSON output encoding)
 
 = 1.0.1 =
 * Security: REST API endpoint for a single block preset no longer exposes draft/private/trashed presets to unauthenticated requests

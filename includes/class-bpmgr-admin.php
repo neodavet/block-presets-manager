@@ -49,8 +49,117 @@ class BPMGR_Admin {
 		// Add custom columns to post list
 		add_filter( 'manage_bpmgr_block_preset_posts_columns', array( $this, 'add_custom_columns' ) );
 		add_action( 'manage_bpmgr_block_preset_posts_custom_column', array( $this, 'render_custom_columns' ), 10, 2 );
+
+		// Row action + AJAX handlers for duplicating and previewing presets.
+		add_filter( 'post_row_actions', array( $this, 'add_row_actions' ), 10, 2 );
+		add_action( 'wp_ajax_bpmgr_duplicate_block', array( $this, 'ajax_duplicate_block' ) );
+		add_action( 'wp_ajax_bpmgr_preview_block', array( $this, 'ajax_preview_block' ) );
 	}
 
+	/**
+	 * Add a "Duplicate" row action to the preset list table
+	 *
+	 * @param array   $actions Existing row actions.
+	 * @param WP_Post $post    Current post.
+	 * @return array
+	 */
+	public function add_row_actions( $actions, $post ) {
+		if ( 'bpmgr_block_preset' === $post->post_type && current_user_can( 'edit_post', $post->ID ) ) {
+			$actions['bpmgr_duplicate'] = sprintf(
+				'<a href="#" class="bpmgr-duplicate-link" data-block-id="%1$d">%2$s</a>',
+				absint( $post->ID ),
+				esc_html__( 'Duplicate', 'block-presets-manager' )
+			);
+		}
+		return $actions;
+	}
+
+	/**
+	 * Load and validate the preset targeted by an AJAX request
+	 *
+	 * Verifies the nonce, the post type and the current user's capability to edit it.
+	 * Sends a JSON error and exits when any check fails.
+	 *
+	 * @return WP_Post
+	 */
+	private function get_ajax_preset() {
+		check_ajax_referer( 'bpmgr_admin_nonce', 'nonce' );
+
+		$block_id = isset( $_POST['block_id'] ) ? absint( wp_unslash( $_POST['block_id'] ) ) : 0;
+		$preset   = $block_id ? get_post( $block_id ) : null;
+
+		if ( ! $preset || 'bpmgr_block_preset' !== $preset->post_type ) {
+			wp_send_json_error( __( 'Block preset not found.', 'block-presets-manager' ), 404 );
+		}
+		if ( ! current_user_can( 'edit_post', $preset->ID ) ) {
+			wp_send_json_error( __( 'You are not allowed to do that.', 'block-presets-manager' ), 403 );
+		}
+
+		return $preset;
+	}
+
+	/**
+	 * AJAX: duplicate a block preset as a draft copy
+	 */
+	public function ajax_duplicate_block() {
+		$preset    = $this->get_ajax_preset();
+		$post_type = get_post_type_object( 'bpmgr_block_preset' );
+
+		if ( ! $post_type || ! current_user_can( $post_type->cap->create_posts ) ) {
+			wp_send_json_error( __( 'You are not allowed to do that.', 'block-presets-manager' ), 403 );
+		}
+
+		$new_id = wp_insert_post(
+			wp_slash(
+				array(
+					'post_type'    => 'bpmgr_block_preset',
+					/* translators: %s: Title of the original block preset. */
+					'post_title'   => sprintf( __( '%s (Copy)', 'block-presets-manager' ), $preset->post_title ),
+					'post_content' => $preset->post_content,
+					'post_excerpt' => $preset->post_excerpt,
+					'post_status'  => 'draft',
+					'post_author'  => get_current_user_id(),
+				)
+			),
+			true
+		);
+
+		if ( is_wp_error( $new_id ) || ! $new_id ) {
+			wp_send_json_error( __( 'Duplication failed.', 'block-presets-manager' ), 500 );
+		}
+
+		// Copy taxonomy terms.
+		foreach ( get_object_taxonomies( 'bpmgr_block_preset' ) as $taxonomy ) {
+			$term_ids = wp_get_object_terms( $preset->ID, $taxonomy, array( 'fields' => 'ids' ) );
+			if ( ! is_wp_error( $term_ids ) && ! empty( $term_ids ) ) {
+				wp_set_object_terms( $new_id, $term_ids, $taxonomy );
+			}
+		}
+
+		// Copy custom fields, skipping WordPress-internal and migration bookkeeping keys.
+		foreach ( get_post_meta( $preset->ID ) as $meta_key => $meta_values ) {
+			if ( 0 === strpos( $meta_key, '_edit_' ) || 0 === strpos( $meta_key, '_wp_' ) || '_bpmgr_migrated_from' === $meta_key ) {
+				continue;
+			}
+			foreach ( $meta_values as $meta_value ) {
+				add_post_meta( $new_id, $meta_key, wp_slash( maybe_unserialize( $meta_value ) ) );
+			}
+		}
+
+		wp_send_json_success( array( 'new_id' => $new_id ) );
+	}
+
+	/**
+	 * AJAX: render a block preset for the admin preview container
+	 */
+	public function ajax_preview_block() {
+		$preset = $this->get_ajax_preset();
+
+		// Render through the core 'the_content' filter so blocks and shortcodes behave as in normal content.
+		$content = apply_filters( 'the_content', $preset->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core filter, not a plugin hook.
+
+		wp_send_json_success( array( 'content' => wp_kses_post( $content ) ) );
+	}
 	/**
 	 * Add admin menus
 	 */

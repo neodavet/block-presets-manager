@@ -112,11 +112,10 @@ class BPMGR_Gutenberg_Blocks {
 	/**
 	 * Render callback for the "bpmgr/block-preset" dynamic block
 	 *
-	 * @param array  $attributes Block attributes.
-	 * @param string $content Block inner content (unused; the block has no inner blocks).
+	 * @param array $attributes Block attributes.
 	 * @return string Rendered block HTML.
 	 */
-	public function render_block_preset( $attributes, $content ) {
+	public function render_block_preset( $attributes ) {
 		$preset_id  = isset( $attributes['presetId'] ) ? intval( $attributes['presetId'] ) : 0;
 		$show_title = ! empty( $attributes['showTitle'] );
 		$class_name = isset( $attributes['className'] ) ? sanitize_html_class( $attributes['className'] ) : '';

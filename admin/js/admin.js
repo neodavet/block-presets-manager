@@ -25,6 +25,17 @@ var BPMGR_Admin = {
         this.initFormValidation();
         this.initToolTips();
         this.initCharts();
+        this.initPresetActions();
+    },
+
+    /**
+     * Initialize preset list actions (Duplicate row action)
+     */
+    initPresetActions: function() {
+        $(document).on('click', '.bpmgr-duplicate-link', function(e) {
+            e.preventDefault();
+            BPMGR_BlockPresets.duplicate($(this).data('block-id'));
+        });
     },
 
     /**
@@ -214,6 +225,10 @@ var BPMGR_BlockPresets = {
                 } else {
                     alert(response.data || bpmgr_admin.strings.duplication_failed || 'Duplication failed.');
                 }
+            },
+            error: function(xhr) {
+                var message = xhr.responseJSON && xhr.responseJSON.data;
+                alert(message || bpmgr_admin.strings.duplication_failed || 'Duplication failed.');
             }
         });
     }

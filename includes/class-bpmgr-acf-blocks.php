@@ -110,7 +110,7 @@ class BPMGR_ACF_Blocks {
 	private function register_block_category() {
 		add_filter(
 			'block_categories_all',
-			function ( $categories, $block_editor_context ) {
+			function ( $categories ) {
 				return array_merge(
 					$categories,
 					array(
@@ -123,7 +123,7 @@ class BPMGR_ACF_Blocks {
 				);
 			},
 			99,
-			2
+			1
 		);
 	}
 
@@ -254,12 +254,11 @@ class BPMGR_ACF_Blocks {
 	/**
 	 * Render ACF block
 	 *
-	 * @param array  $block Block array.
-	 * @param string $content Block content
-	 * @param bool   $is_preview Is preview mode.
-	 * @param int    $post_id Post ID.
+	 * ACF also passes $content, $is_preview and $post_id; they are not needed here.
+	 *
+	 * @param array $block Block array.
 	 */
-	public function render_block( $block, $content = '', $is_preview = false, $post_id = 0 ) {
+	public function render_block( $block ) {
 		$block_slug = str_replace( 'acf/', '', $block['name'] );
 
 		// Find the template file
