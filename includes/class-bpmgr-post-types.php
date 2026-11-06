@@ -88,6 +88,10 @@ class BPMGR_Post_Types {
 			'show_in_rest' => true,
 			'menu_icon'    => 'dashicons-block-default',
 			'supports'     => array( 'title', 'editor' ),
+			'rewrite'      => array(
+				'slug'       => 'block-preset',
+				'with_front' => false,
+			),
 		);
 
 		// Register the canonical post type slug used throughout the plugin
