@@ -248,7 +248,7 @@ function bpmgr_get_total_usage_cached() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- reads the plugin's own table (identifier only is interpolated); the result is cached with wp_cache_set() below.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- reads the plugin's own table (identifier only is interpolated); the result is cached with wp_cache_set() below.
 		$total_usage = $wpdb->get_var( "SELECT SUM(usage_count) FROM {$table_name}" );
 
 		// Cache for 5 minutes
@@ -269,7 +269,7 @@ function bpmgr_get_most_used_presets_cached() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
 		$most_used = $wpdb->get_results(
 			"
             SELECT p.ID, p.post_title, SUM(u.usage_count) as total_usage 
@@ -281,7 +281,7 @@ function bpmgr_get_most_used_presets_cached() {
             LIMIT 10
         "
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Cache for 10 minutes
 		wp_cache_set( $cache_key, $most_used, 'bpmgr_statistics', 600 );
@@ -301,7 +301,7 @@ function bpmgr_get_unused_presets_cached() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
 		$unused_presets = $wpdb->get_results(
 			"
             SELECT p.ID, p.post_title 
@@ -313,7 +313,7 @@ function bpmgr_get_unused_presets_cached() {
             ORDER BY p.post_title ASC
         "
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Cache for 15 minutes
 		wp_cache_set( $cache_key, $unused_presets, 'bpmgr_statistics', 900 );
@@ -333,7 +333,7 @@ function bpmgr_get_recent_usage_cached() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
 		$recent_usage = $wpdb->get_results(
 			"
             SELECT p.post_title as block_title, p2.post_title as used_on, u.last_used, u.usage_count
@@ -344,7 +344,7 @@ function bpmgr_get_recent_usage_cached() {
             LIMIT 20
         "
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Cache for 5 minutes
 		wp_cache_set( $cache_key, $recent_usage, 'bpmgr_statistics', 300 );
@@ -364,7 +364,7 @@ function bpmgr_get_monthly_usage_cached() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 		// Only the table name ($wpdb->prefix / $wpdb->posts) is interpolated, never user input; $wpdb->prepare() cannot parameterize identifiers.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- reads the plugin's own table (identifiers only are interpolated); the result is cached with wp_cache_set() below.
 		$monthly_usage = $wpdb->get_results(
 			"
             SELECT DATE_FORMAT(last_used, '%Y-%m') as month, SUM(usage_count) as total_usage
@@ -374,7 +374,7 @@ function bpmgr_get_monthly_usage_cached() {
             ORDER BY month ASC
         "
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Cache for 1 hour
 		wp_cache_set( $cache_key, $monthly_usage, 'bpmgr_statistics', 3600 );

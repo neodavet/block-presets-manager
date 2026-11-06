@@ -4,7 +4,7 @@ Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Text Domain: block-presets-manager
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,10 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 
 == Changelog ==
 
+= 1.0.4 =
+* Changed: the plugin author is now listed as David Tavares Cuevas
+* Changed: the Plugin URI now points to the GitHub repository
+
 = 1.0.3 =
 * Changed: block preset pages now use the URL base `/block-preset/` (previously `/bpmgr_block_preset/`); the old URL redirects to the new one
 * Fix: single preset pages returned a 404 after activation because rewrite rules were flushed before the post types were registered
@@ -147,6 +151,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 * Comprehensive uninstall cleanup
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Updates the plugin author name and Plugin URI. No functional changes.
 
 = 1.0.3 =
 Preset URLs change to /block-preset/ and several admin and activation fixes. Rewrite rules are flushed automatically on activation.

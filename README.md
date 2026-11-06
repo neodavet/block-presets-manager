@@ -2,8 +2,8 @@
 
 A free, open-source WordPress plugin to create and manage reusable Gutenberg block presets. Build content once and reuse it anywhere via a native block, PHP helpers, shortcodes, or REST API.
 
-- Author: davet86
-- Plugin URI: https://neodavet.github.io/davetportfolio/
+- Author: David Tavares Cuevas
+- Plugin URI: https://github.com/neodavet/block-presets-manager
 - License: GPL v2 or later
 - Requires: WordPress 5.9+, PHP 7.4+
 - Tested up to: WordPress 7.1
@@ -110,4 +110,4 @@ GPL v2.0 or later. See `LICENSE` or:
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 
 ## Credits
-Created and maintained by `davet86`. Learn more: https://neodavet.github.io/davetportfolio/
+Created and maintained by David Tavares Cuevas. Learn more: https://neodavet.github.io/davetportfolio/

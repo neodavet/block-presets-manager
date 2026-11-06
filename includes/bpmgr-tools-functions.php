@@ -85,7 +85,7 @@ function bpmgr_reset_usage_stats() {
 	// Table name is built from $wpdb->prefix (not user input), so it is safe to interpolate;
 	// $wpdb->prepare() does not support table/column identifiers as placeholders.
 	$table_name = $wpdb->prefix . 'bpmgr_block_usage';
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $table_name is $wpdb->prefix plus a literal, never user input.
 	return false !== $wpdb->query( "TRUNCATE TABLE $table_name" );
 }
 

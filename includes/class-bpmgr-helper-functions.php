@@ -312,7 +312,7 @@ class BPMGR_Helper_Functions {
 		$table_name = $wpdb->prefix . 'bpmgr_block_usage';
 
 		// Check if record exists
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $table_name is $wpdb->prefix plus a literal, never user input.
 		$existing = $wpdb->get_row(
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
