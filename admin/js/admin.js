@@ -1,7 +1,7 @@
 /**
- * Admin JavaScript for Block Presets Manager
+ * Admin JavaScript for OnceBlock
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 

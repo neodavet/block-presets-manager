@@ -1,4 +1,4 @@
-# Block Presets Manager
+# OnceBlock – Build Once, Insert Anywhere
 
 A free, open-source WordPress plugin to create and manage reusable Gutenberg block presets. Build content once and reuse it anywhere via a native block, PHP helpers, shortcodes, or REST API.
 
@@ -11,19 +11,18 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 ## Key Features
 - Native custom post type for presets: `bpmgr_block_preset`
 - Gutenberg block to insert presets (`bpmgr/block-preset`)
-- Shortcodes: `[bpmgr_block id="123"]` and legacy `[block_preset id="123"]`
-- PHP helpers: `bpmgr_render_block_preset()` and legacy `do_cpt_block()`
+- Shortcodes: `[bpmgr_block id="123"]`
+- PHP helpers: `bpmgr_render_block_preset()`
 - Taxonomies: categories (`bpmgr_block_category`) and tags (`bpmgr_block_tag`)
 - Usage tracking: local table logs where presets are used
 - REST API: list, fetch, and render presets
 - Admin UI: Settings, Tools, and Statistics
-- Migration tools: from legacy post type `block`
 - Optional ACF integration: auto-register ACF blocks from theme folders (only when enabled and ACF Pro is installed)
 - Translation-ready and full uninstall cleanup
 
 ## Installation
-1. Upload `block-presets-manager/` to `wp-content/plugins/`.
-2. Activate “Block Presets Manager” in Plugins.
+1. Upload `onceblock/` to `wp-content/plugins/`.
+2. Activate “OnceBlock” in Plugins.
 3. Go to Settings → Blocks Presets to configure.
 4. Create presets under the “Block Presets” menu and use the block or shortcodes in your content.
 
@@ -35,16 +34,11 @@ A free, open-source WordPress plugin to create and manage reusable Gutenberg blo
 
 ### PHP
 ```php
-// Recommended
 bpmgr_render_block_preset(123);
-
-// Legacy (still supported)
-do_cpt_block(123);
 ```
 
 ### Shortcodes
-- `[bpmgr_block id="123"]` (recommended)
-- `[block_preset id="123"]` (legacy)
+- `[bpmgr_block id="123"]`
 
 ### REST API
 - `GET /wp-json/bpmgr/v1/block-presets`
@@ -56,7 +50,6 @@ Find these under Settings → Blocks Presets.
 
 - Enable Block Presets: core `bpmgr_block_preset` functionality
 - Enable ACF Blocks (Optional): auto-register ACF blocks from theme folders when ACF Pro is active
-- Enable Legacy Post Type: keep legacy `block` post type for backward compatibility during migration
 - ACF Block Folders (one per line):
   - `general/acf-blocks`
   - `public/acf-blocks`
@@ -71,25 +64,10 @@ When enabled and ACF Pro is installed, the plugin can:
 
 If ACF is not installed or ACF features are disabled, the plugin works fully with native WordPress features.
 
-## Migration Guide (from legacy systems)
-1. Activate the plugin.
-2. Visit Settings → Blocks Presets and verify:
-   - Enable Block Presets: ON
-   - Enable Legacy Post Type: ON (during migration)
-   - Enable ACF Blocks: optional (only if you use ACF Pro)
-3. Use Block Presets → Tools to migrate old content if needed.
-4. Test:
-   - Legacy `do_cpt_block()` calls still work
-   - New `bpmgr_render_block_preset()` and the Gutenberg block
-5. After confirming everything works, disable “Enable Legacy Post Type”.
-
 ## Troubleshooting
 - ACF blocks not appearing:
   - Ensure ACF Pro is active and “Enable ACF Blocks” is ON
   - Verify folders exist and are configured in Settings
-- Old blocks not working:
-  - Keep “Enable Legacy Post Type” ON during migration
-  - Run migration tools in Block Presets → Tools
 - Duplicate menus or conflicts:
   - Ensure no theme or other plugin registers the same post types
 
@@ -101,7 +79,7 @@ If ACF is not installed or ACF features are disabled, the plugin works fully wit
 ## Contributing
 Contributions are welcome! Open an issue or submit a pull request.
 - Follow WordPress coding standards
-- Keep user-facing strings translatable (`__()`, `_x()`) with text domain `block-presets-manager`
+- Keep user-facing strings translatable (`__()`, `_x()`) with text domain `onceblock`
 - Add sanitization/escaping and capability checks where appropriate
 - Include unminified sources for any bundled/minified assets
 

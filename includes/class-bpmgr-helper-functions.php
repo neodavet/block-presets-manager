@@ -1,8 +1,8 @@
 <?php
 /**
- * Helper Functions for Block Presets Manager
+ * Helper Functions for OnceBlock
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
@@ -41,7 +41,7 @@ class BPMGR_Helper_Functions {
 		$this->define_global_functions();
 
 		// Register shortcodes directly rather than via add_action( 'init', ... ): this class is
-		// only ever instantiated from Block_Presets_Manager::init(), which is itself already
+		// only ever instantiated from BPMGR_Plugin::init(), which is itself already
 		// running as an 'init' callback. Re-hooking to the currently-executing 'init' pass is
 		// not reliably picked up, which previously left the shortcodes unregistered.
 		$this->register_shortcodes();
@@ -97,22 +97,6 @@ class BPMGR_Helper_Functions {
 			}
 		}
 
-		if ( ! function_exists( 'do_cpt_block' ) ) {
-			/**
-			 * Legacy function to maintain backward compatibility
-			 * Renders a block preset - wrapper for bpmgr_render_block_preset
-			 *
-			 * Deliberately unprefixed: this name is kept as-is for backward compatibility with sites
-			 * migrating from the legacy block system that already call do_cpt_block().
-			 *
-			 * @param int $block_id Block preset ID
-			 * @return void
-			 */
-			function do_cpt_block( $block_id ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-				bpmgr_render_block_preset( $block_id );
-			}
-		}
-
 		if ( ! function_exists( 'bpmgr_get_block_presets' ) ) {
 			/**
 			 * Get block presets
@@ -145,7 +129,6 @@ class BPMGR_Helper_Functions {
 	 */
 	public function register_shortcodes() {
 		add_shortcode( 'bpmgr_block', array( $this, 'block_preset_shortcode' ) );
-		add_shortcode( 'block_preset', array( $this, 'block_preset_shortcode' ) ); // Legacy support.
 	}
 
 	/**
@@ -194,7 +177,6 @@ class BPMGR_Helper_Functions {
 			return;
 		}
 
-		// Try new post type first, then fallback to old 'block' post type
 		$block = get_post( $block_id );
 
 		if ( ! $block ) {
@@ -202,7 +184,7 @@ class BPMGR_Helper_Functions {
 		}
 
 		// Check if it's a valid block preset post type
-		if ( ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) ) {
+		if ( 'bpmgr_block_preset' !== $block->post_type ) {
 			return;
 		}
 
@@ -262,7 +244,7 @@ class BPMGR_Helper_Functions {
 	 */
 	public static function get_block_presets( $args = array() ) {
 		$defaults = array(
-			'post_type'      => array( 'bpmgr_block_preset', 'block' ), // Support both new and old post types.
+			'post_type'      => 'bpmgr_block_preset',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'title',
@@ -287,7 +269,8 @@ class BPMGR_Helper_Functions {
 
 		$block = get_post( $block_id );
 
-		if ( ! $block || ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) ) {
+		// Only published presets: this value can reach public output, so never expose drafts/private presets.
+		if ( ! $block || 'bpmgr_block_preset' !== $block->post_type || 'publish' !== $block->post_status ) {
 			return '';
 		}
 
@@ -459,8 +442,8 @@ class BPMGR_Helper_Functions {
 
 		// Also verify publish status: this is a public, unauthenticated endpoint, so
 		// draft/private/trashed presets must never be returned.
-		if ( ! $block || ! in_array( $block->post_type, array( 'bpmgr_block_preset', 'block' ), true ) || 'publish' !== $block->post_status ) {
-			return new WP_REST_Response( array( 'error' => __( 'Block preset not found.', 'block-presets-manager' ) ), 404 );
+		if ( ! $block || 'bpmgr_block_preset' !== $block->post_type || 'publish' !== $block->post_status ) {
+			return new WP_REST_Response( array( 'error' => __( 'Block preset not found.', 'onceblock' ) ), 404 );
 		}
 
 		$preset = array(
@@ -492,7 +475,7 @@ class BPMGR_Helper_Functions {
 		$rendered_content = ob_get_clean();
 
 		if ( empty( $rendered_content ) ) {
-			return new WP_REST_Response( array( 'error' => __( 'Block preset not found or empty.', 'block-presets-manager' ) ), 404 );
+			return new WP_REST_Response( array( 'error' => __( 'Block preset not found or empty.', 'onceblock' ) ), 404 );
 		}
 
 		return new WP_REST_Response(

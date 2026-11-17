@@ -1,11 +1,11 @@
-=== Block Presets Manager ===
+=== OnceBlock – Build Once, Insert Anywhere ===
 Contributors: davet86, alkesh7
 Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
-Text Domain: block-presets-manager
+Stable tag: 1.0.6
+Text Domain: onceblock
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ A powerful native WordPress plugin for creating and managing reusable Gutenberg 
 
 == Description ==
 
-Block Presets Manager is a comprehensive solution for managing reusable block content in WordPress. This plugin allows you to create, organize, and deploy block presets across your website with ease.
+OnceBlock is a comprehensive solution for managing reusable block content in WordPress. This plugin allows you to create, organize, and deploy block presets across your website with ease.
 
 = Key Features =
 
@@ -23,8 +23,6 @@ Block Presets Manager is a comprehensive solution for managing reusable block co
 * **Usage Tracking**: Monitor which presets are used where and how often
 * **REST API**: Full REST API support for headless implementations
 * **Shortcode Support**: Easy insertion via shortcodes `[bpmgr_block id="123"]`
-* **Legacy Compatibility**: Maintains compatibility with existing `do_cpt_block()` functions
-* **Migration Tools**: Seamlessly migrate from old block systems
 * **Statistics Dashboard**: Comprehensive usage analytics and reporting
 * **Taxonomies**: Organize presets with categories and tags
 * **ACF Integration (Optional)**: Automatic registration of ACF blocks from theme folders if ACF Pro is installed
@@ -40,9 +38,9 @@ Block Presets Manager is a comprehensive solution for managing reusable block co
 
 = Usage Examples =
 
-In PHP templates: `bpmgr_render_block_preset(123);` and `do_cpt_block(123)` (legacy support)
+In PHP templates: `bpmgr_render_block_preset(123);`
 
-In content: `[bpmgr_block id="123"]` and `[block_preset id="123"]` (legacy)
+In content: `[bpmgr_block id="123"]`
 
 REST API: `GET /wp-json/bpmgr/v1/block-presets`, `GET /wp-json/bpmgr/v1/block-presets/123`, `GET /wp-json/bpmgr/v1/block-presets/123/render`
 
@@ -57,18 +55,9 @@ The plugin automatically scans specified theme folders for ACF blocks and regist
 
 You can customize these folders in the plugin settings.
 
-= Migration Support =
-
-Seamlessly migrate from existing block systems with built-in migration tools that handle:
-
-* Old post type conversion
-* Meta data preservation
-* Taxonomy migration
-* Usage statistics transfer
-
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/block-presets-manager/`
+1. Upload the plugin files to `/wp-content/plugins/onceblock/`
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Navigate to Settings > Blocks Presets to configure the plugin
 4. Start creating block presets under the new "Block Presets" menu
@@ -78,10 +67,6 @@ Seamlessly migrate from existing block systems with built-in migration tools tha
 = Does this plugin require ACF? =
 
 No! This plugin works with pure WordPress and has no external dependencies. ACF integration is completely optional and can be enabled in settings if you have Advanced Custom Fields Pro installed.
-
-= Can I migrate from an existing block system? =
-
-Yes! The plugin includes migration tools accessible via Block Presets > Tools that can migrate from the old "block" post type format.
 
 = Is this compatible with my theme? =
 
@@ -96,6 +81,13 @@ Yes, block presets work within the Gutenberg editor and are compatible with most
 Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to specify which theme folders should be scanned for ACF blocks.
 
 == Changelog ==
+
+= 1.0.6 =
+* Changed: the plugin is now named OnceBlock – Build Once, Insert Anywhere (slug `onceblock`)
+* Removed: the unprefixed legacy `block` post type, the `[block_preset]` shortcode, `do_cpt_block()`, the "Enable Legacy Post Type" setting and the migration tool
+* Fix: the REST API routes and PHP helpers only ever return published block presets
+* Fix: the Statistics chart script is now enqueued instead of printed inline
+* Security: rendered preset content is passed through `wp_kses_post()` in the block render callback
 
 = 1.0.5 =
 * Removed "Tested up to" from the plugin header; it is now declared only in readme.txt, as WordPress.org requires
@@ -147,6 +139,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 
 == Upgrade Notice ==
 
+= 1.0.6 =
+The plugin is renamed to OnceBlock. The legacy `block` post type, `[block_preset]` shortcode and `do_cpt_block()` function are removed; use `bpmgr_block_preset`, `[bpmgr_block]` and `bpmgr_render_block_preset()`.
+
 = 1.0.5 =
 Removes the "Tested up to" line from the plugin header. No functional changes.
 
@@ -163,7 +158,7 @@ Fixes a fatal error on the Tools page and renames the plugin to Block Presets Ma
 Security and stability update: fixes two fatal-error bugs and closes a settings-validation gap. Upgrade is recommended for all users.
 
 = 1.0.0 =
-Initial release of Block Presets Manager. If you're migrating from a custom implementation, use the migration tools in Block Presets > Tools.
+Initial release.
 
 == Developer Information ==
 
@@ -182,8 +177,8 @@ Filters:
 
 = File Structure =
 
-    block-presets-manager/
-    ├── block-presets-manager.php
+    onceblock/
+    ├── onceblock.php
     ├── uninstall.php
     ├── readme.txt
     ├── LICENSE
@@ -205,6 +200,7 @@ Filters:
         ├── css/
         │   └── admin.css
         └── js/
-            └── admin.js
+            ├── admin.js
+            └── statistics-chart.js
 
 For more information and documentation, visit: https://neodavet.github.io/davetportfolio/

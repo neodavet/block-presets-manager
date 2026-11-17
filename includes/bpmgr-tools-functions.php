@@ -1,78 +1,19 @@
 <?php
 /**
- * Helper functions for the Tools admin screen (migration, usage reset, export)
+ * Helper functions for the Tools admin screen (usage reset, export)
  *
  * Loaded unconditionally alongside the plugin's other dependencies (not only when the
  * Tools page itself renders) so bpmgr_export_presets() is available to BPMGR_Admin's
  * admin_init handler, which must run - and may need to send file-download headers -
  * before the Tools page template ever outputs any HTML.
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-/**
- * Migrate legacy "block" post type entries to the bpmgr_block_preset post type
- *
- * @return int Number of block presets migrated.
- */
-function bpmgr_migrate_old_blocks() {
-	$old_blocks = get_posts(
-		array(
-			'post_type'      => 'block',
-			'posts_per_page' => -1,
-			'post_status'    => 'any',
-		)
-	);
-
-	$migrated = 0;
-
-	foreach ( $old_blocks as $old_block ) {
-		$new_post_data = array(
-			'post_title'   => $old_block->post_title,
-			'post_content' => $old_block->post_content,
-			'post_excerpt' => $old_block->post_excerpt,
-			'post_status'  => $old_block->post_status,
-			'post_type'    => 'bpmgr_block_preset',
-			'post_author'  => $old_block->post_author,
-			'post_date'    => $old_block->post_date,
-		);
-
-		$new_post_id = wp_insert_post( $new_post_data );
-
-		if ( $new_post_id && ! is_wp_error( $new_post_id ) ) {
-			// Copy meta data.
-			$meta_data = get_post_meta( $old_block->ID );
-			foreach ( $meta_data as $meta_key => $meta_values ) {
-				foreach ( $meta_values as $meta_value ) {
-					add_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_value ) );
-				}
-			}
-
-			// Copy taxonomies.
-			$taxonomies = get_object_taxonomies( 'block' );
-			foreach ( $taxonomies as $taxonomy ) {
-				$terms = wp_get_post_terms( $old_block->ID, $taxonomy );
-				if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
-					$term_ids = wp_list_pluck( $terms, 'term_id' );
-					wp_set_post_terms( $new_post_id, $term_ids, $taxonomy );
-				}
-			}
-
-			// Set migration flag.
-			update_post_meta( $new_post_id, '_bpmgr_migrated_from', $old_block->ID );
-			update_post_meta( $new_post_id, '_bpmgr_block_type', 'migrated' );
-
-			++$migrated;
-		}
-	}
-
-	return $migrated;
 }
 
 /**

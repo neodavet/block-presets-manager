@@ -7,7 +7,7 @@
  * phpcs analyzes included template files statically and cannot see that, hence the
  * blanket disable below for the "unprefixed global" sniff.
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Defense-in-depth: the menu registration already restricts this page to 'manage_options',
 // but verify again in case this template is ever included from elsewhere.
 if ( ! current_user_can( 'manage_options' ) ) {
-	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'block-presets-manager' ) );
+	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'onceblock' ) );
 }
 
 // Get overall statistics with caching
@@ -41,22 +41,22 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 		<!-- Overview Cards -->
 		<div class="bpmgr-stats-cards">
 			<div class="bpmgr-stat-card">
-				<h3><?php esc_html_e( 'Total Block Presets', 'block-presets-manager' ); ?></h3>
+				<h3><?php esc_html_e( 'Total Block Presets', 'onceblock' ); ?></h3>
 				<div class="bpmgr-stat-number"><?php echo esc_html( $total_presets ); ?></div>
 			</div>
 			
 			<div class="bpmgr-stat-card">
-				<h3><?php esc_html_e( 'Total Usage Count', 'block-presets-manager' ); ?></h3>
+				<h3><?php esc_html_e( 'Total Usage Count', 'onceblock' ); ?></h3>
 				<div class="bpmgr-stat-number"><?php echo esc_html( $total_usage ? $total_usage : 0 ); ?></div>
 			</div>
 			
 			<div class="bpmgr-stat-card">
-				<h3><?php esc_html_e( 'Unused Presets', 'block-presets-manager' ); ?></h3>
+				<h3><?php esc_html_e( 'Unused Presets', 'onceblock' ); ?></h3>
 				<div class="bpmgr-stat-number"><?php echo esc_html( count( $unused_presets ) ); ?></div>
 			</div>
 			
 			<div class="bpmgr-stat-card">
-				<h3><?php esc_html_e( 'Average Usage', 'block-presets-manager' ); ?></h3>
+				<h3><?php esc_html_e( 'Average Usage', 'onceblock' ); ?></h3>
 				<div class="bpmgr-stat-number">
 					<?php echo esc_html( $total_presets > 0 ? round( ( $total_usage ? $total_usage : 0 ) / $total_presets, 1 ) : 0 ); ?>
 				</div>
@@ -67,15 +67,15 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 			
 			<!-- Most Used Presets -->
 			<div class="bpmgr-stats-section">
-				<h2><?php esc_html_e( 'Most Used Block Presets', 'block-presets-manager' ); ?></h2>
+				<h2><?php esc_html_e( 'Most Used Block Presets', 'onceblock' ); ?></h2>
 				
 				<?php if ( ! empty( $most_used ) ) : ?>
 					<table class="wp-list-table widefat fixed striped">
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
-								<th><?php esc_html_e( 'Usage Count', 'block-presets-manager' ); ?></th>
-								<th><?php esc_html_e( 'Actions', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Block Preset', 'onceblock' ); ?></th>
+								<th><?php esc_html_e( 'Usage Count', 'onceblock' ); ?></th>
+								<th><?php esc_html_e( 'Actions', 'onceblock' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -91,7 +91,7 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 								<td><?php echo esc_html( $preset->total_usage ? $preset->total_usage : 0 ); ?></td>
 								<td>
 									<a href="<?php echo esc_url( get_edit_post_link( $preset->ID ) ); ?>" class="button button-small">
-										<?php esc_html_e( 'Edit', 'block-presets-manager' ); ?>
+										<?php esc_html_e( 'Edit', 'onceblock' ); ?>
 									</a>
 								</td>
 							</tr>
@@ -99,22 +99,22 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No usage data available yet.', 'block-presets-manager' ); ?></p>
+					<p><?php esc_html_e( 'No usage data available yet.', 'onceblock' ); ?></p>
 				<?php endif; ?>
 			</div>
 			
 			<!-- Recent Activity -->
 			<div class="bpmgr-stats-section">
-				<h2><?php esc_html_e( 'Recent Usage Activity', 'block-presets-manager' ); ?></h2>
+				<h2><?php esc_html_e( 'Recent Usage Activity', 'onceblock' ); ?></h2>
 				
 				<?php if ( ! empty( $recent_usage ) ) : ?>
 					<table class="wp-list-table widefat fixed striped">
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
-								<th><?php esc_html_e( 'Used On', 'block-presets-manager' ); ?></th>
-								<th><?php esc_html_e( 'Last Used', 'block-presets-manager' ); ?></th>
-								<th><?php esc_html_e( 'Count', 'block-presets-manager' ); ?></th>
+								<th><?php esc_html_e( 'Block Preset', 'onceblock' ); ?></th>
+								<th><?php esc_html_e( 'Used On', 'onceblock' ); ?></th>
+								<th><?php esc_html_e( 'Last Used', 'onceblock' ); ?></th>
+								<th><?php esc_html_e( 'Count', 'onceblock' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -122,14 +122,14 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 							<tr>
 								<td><?php echo esc_html( $usage->block_title ); ?></td>
 								<td><?php echo esc_html( $usage->used_on ); ?></td>
-								<td><?php echo esc_html( human_time_diff( strtotime( $usage->last_used ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'block-presets-manager' ) ); ?></td>
+								<td><?php echo esc_html( human_time_diff( strtotime( $usage->last_used ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'onceblock' ) ); ?></td>
 								<td><?php echo esc_html( $usage->usage_count ); ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No recent usage activity.', 'block-presets-manager' ); ?></p>
+					<p><?php esc_html_e( 'No recent usage activity.', 'onceblock' ); ?></p>
 				<?php endif; ?>
 			</div>
 			
@@ -138,14 +138,14 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 		<!-- Unused Presets -->
 		<?php if ( ! empty( $unused_presets ) ) : ?>
 		<div class="bpmgr-stats-section bpmgr-full-width">
-			<h2><?php esc_html_e( 'Unused Block Presets', 'block-presets-manager' ); ?></h2>
-			<p><?php esc_html_e( 'These block presets have never been used. Consider reviewing them for relevance.', 'block-presets-manager' ); ?></p>
+			<h2><?php esc_html_e( 'Unused Block Presets', 'onceblock' ); ?></h2>
+			<p><?php esc_html_e( 'These block presets have never been used. Consider reviewing them for relevance.', 'onceblock' ); ?></p>
 			
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Block Preset', 'block-presets-manager' ); ?></th>
-						<th><?php esc_html_e( 'Actions', 'block-presets-manager' ); ?></th>
+						<th><?php esc_html_e( 'Block Preset', 'onceblock' ); ?></th>
+						<th><?php esc_html_e( 'Actions', 'onceblock' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -160,10 +160,10 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 						</td>
 						<td>
 							<a href="<?php echo esc_url( get_edit_post_link( $preset->ID ) ); ?>" class="button button-small">
-								<?php esc_html_e( 'Edit', 'block-presets-manager' ); ?>
+								<?php esc_html_e( 'Edit', 'onceblock' ); ?>
 							</a>
 							<a href="<?php echo esc_url( get_permalink( $preset->ID ) ); ?>" class="button button-small" target="_blank">
-								<?php esc_html_e( 'Preview', 'block-presets-manager' ); ?>
+								<?php esc_html_e( 'Preview', 'onceblock' ); ?>
 							</a>
 						</td>
 					</tr>
@@ -175,7 +175,7 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 		
 		<!-- Usage by Month Chart -->
 		<div class="bpmgr-stats-section bpmgr-full-width">
-			<h2><?php esc_html_e( 'Usage Trends', 'block-presets-manager' ); ?></h2>
+			<h2><?php esc_html_e( 'Usage Trends', 'onceblock' ); ?></h2>
 			
 			<?php
 			// Get usage by month for the last 12 months
@@ -187,45 +187,16 @@ $recent_usage   = bpmgr_get_recent_usage_cached();
 					<canvas id="bpmgr-usage-chart" width="400" height="200"></canvas>
 				</div>
 				
-				<script>
-				// Simple chart implementation (you might want to use Chart.js or similar)
-				document.addEventListener('DOMContentLoaded', function() {
-					const canvas = document.getElementById('bpmgr-usage-chart');
-					const ctx = canvas.getContext('2d');
-					
-					// Chart data
-					const data = <?php echo wp_json_encode( $monthly_usage, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
-					
-					// Draw simple bar chart
-					const padding = 40;
-					const chartWidth = canvas.width - (padding * 2);
-					const chartHeight = canvas.height - (padding * 2);
-					const barWidth = chartWidth / data.length;
-					const maxValue = Math.max(...data.map(d => parseInt(d.total_usage)));
-					
-					// Clear canvas
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
-					
-					// Draw bars
-					data.forEach((item, index) => {
-						const barHeight = (parseInt(item.total_usage) / maxValue) * chartHeight;
-						const x = padding + (index * barWidth);
-						const y = canvas.height - padding - barHeight;
-						
-						ctx.fillStyle = '#0073aa';
-						ctx.fillRect(x + 5, y, barWidth - 10, barHeight);
-						
-						// Draw labels
-						ctx.fillStyle = '#333';
-						ctx.font = '12px Arial';
-						ctx.textAlign = 'center';
-						ctx.fillText(item.month, x + (barWidth / 2), canvas.height - 10);
-						ctx.fillText(item.total_usage, x + (barWidth / 2), y - 5);
-					});
-				});
-				</script>
+				<?php
+				wp_enqueue_script( 'bpmgr-statistics-chart', BPMGR_PLUGIN_URL . 'admin/js/statistics-chart.js', array(), BPMGR_VERSION, true );
+				wp_add_inline_script(
+					'bpmgr-statistics-chart',
+					'window.bpmgrUsageData = ' . wp_json_encode( $monthly_usage, JSON_HEX_TAG | JSON_HEX_AMP ) . ';',
+					'before'
+				);
+				?>
 			<?php else : ?>
-				<p><?php esc_html_e( 'No usage trend data available yet.', 'block-presets-manager' ); ?></p>
+				<p><?php esc_html_e( 'No usage trend data available yet.', 'onceblock' ); ?></p>
 			<?php endif; ?>
 		</div>
 		

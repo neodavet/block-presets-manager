@@ -1,6 +1,6 @@
 {
-	"name": "local/block-presets-manager",
-	"description": "Block Presets Manager WordPress plugin",
+	"name": "local/onceblock",
+	"description": "OnceBlock WordPress plugin",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"require": {

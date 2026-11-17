@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Block Presets Manager
+ * Plugin Name: OnceBlock – Build Once, Insert Anywhere
  * Plugin URI: https://github.com/neodavet/block-presets-manager
  * Description: A powerful plugin for creating and managing reusable Gutenberg block presets. Allows you to create custom block templates and ACF blocks that can be reused across your website.
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: David Tavares Cuevas
  * Author URI: https://neodavet.github.io/davetportfolio/
- * Text Domain: block-presets-manager
+ * Text Domain: onceblock
  * Domain Path: /languages
  * Requires at least: 5.9
  * Requires PHP: 7.4
@@ -15,7 +15,7 @@
  *
  * Copyright (C) 2026 David Tavares Cuevas
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  */
 
 // Prevent direct access
@@ -24,22 +24,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'BPMGR_VERSION', '1.0.5' );
+define( 'BPMGR_VERSION', '1.0.6' );
 define( 'BPMGR_PLUGIN_FILE', __FILE__ );
 define( 'BPMGR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BPMGR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'BPMGR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'BPMGR_TEXT_DOMAIN', 'block-presets-manager' );
+define( 'BPMGR_TEXT_DOMAIN', 'onceblock' );
 
 /**
  * Main Plugin Class
  */
-class Block_Presets_Manager {
+class BPMGR_Plugin {
 
 	/**
 	 * Plugin instance
 	 *
-	 * @var Block_Presets_Manager
+	 * @var BPMGR_Plugin
 	 */
 	private static $instance = null;
 
@@ -144,12 +144,12 @@ class Block_Presets_Manager {
 	 */
 	public function add_privacy_policy_content() {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			$content  = '<p>' . esc_html__( 'Block Presets Manager stores minimal data locally to provide its functionality.', 'block-presets-manager' ) . '</p>';
-			$content .= '<p>' . esc_html__( 'Specifically, it creates a local database table to track where a block preset is used: block ID, post ID, usage count, and last used date. No personal data is collected by this feature, and no data is transmitted to third parties.', 'block-presets-manager' ) . '</p>';
-			$content .= '<p>' . esc_html__( 'If you uninstall the plugin from the Plugins screen, all plugin data (including this usage table, options, and related metadata) will be removed.', 'block-presets-manager' ) . '</p>';
+			$content  = '<p>' . esc_html__( 'OnceBlock stores minimal data locally to provide its functionality.', 'onceblock' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'Specifically, it creates a local database table to track where a block preset is used: block ID, post ID, usage count, and last used date. No personal data is collected by this feature, and no data is transmitted to third parties.', 'onceblock' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'If you uninstall the plugin from the Plugins screen, all plugin data (including this usage table, options, and related metadata) will be removed.', 'onceblock' ) . '</p>';
 
 			wp_add_privacy_policy_content(
-				__( 'Block Presets Manager', 'block-presets-manager' ),
+				__( 'OnceBlock', 'onceblock' ),
 				wp_kses_post( $content )
 			);
 		}
@@ -168,10 +168,9 @@ class Block_Presets_Manager {
 		// Set default options
 		if ( ! get_option( 'bpmgr_settings' ) ) {
 			$default_settings = array(
-				'enable_acf_blocks'       => false, // Disabled by default - purely native WordPress.
-				'enable_block_presets'    => true,
-				'enable_legacy_post_type' => true, // Enable for backward compatibility.
-				'block_folders'           => array(
+				'enable_acf_blocks'    => false, // Disabled by default - purely native WordPress.
+				'enable_block_presets' => true,
+				'block_folders'        => array(
 					'general/acf-blocks',
 					'public/acf-blocks',
 					'login-register/acf-blocks',
@@ -231,11 +230,11 @@ class Block_Presets_Manager {
 		?>
 		<div class="notice notice-success is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'Block Presets Manager activated successfully!', 'block-presets-manager' ); ?></strong>
-				<?php esc_html_e( 'You can now manage your block presets from the', 'block-presets-manager' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset' ) ); ?>"><strong><?php esc_html_e( 'Block Presets', 'block-presets-manager' ); ?></strong></a>
-				<?php esc_html_e( 'menu.', 'block-presets-manager' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'block-presets-manager' ); ?></a>
+				<strong><?php esc_html_e( 'OnceBlock activated successfully!', 'onceblock' ); ?></strong>
+				<?php esc_html_e( 'You can now manage your block presets from the', 'onceblock' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset' ) ); ?>"><strong><?php esc_html_e( 'Block Presets', 'onceblock' ); ?></strong></a>
+				<?php esc_html_e( 'menu.', 'onceblock' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'onceblock' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -266,14 +265,14 @@ class Block_Presets_Manager {
 // Activation and deactivation hooks must be registered unconditionally, every time this file
 // loads - not deferred behind 'plugins_loaded' - otherwise WordPress won't see them in time
 // when it fires the activation/deactivation hooks.
-register_activation_hook( BPMGR_PLUGIN_FILE, array( 'Block_Presets_Manager', 'run_activation' ) );
-register_deactivation_hook( BPMGR_PLUGIN_FILE, array( 'Block_Presets_Manager', 'run_deactivation' ) );
+register_activation_hook( BPMGR_PLUGIN_FILE, array( 'BPMGR_Plugin', 'run_activation' ) );
+register_deactivation_hook( BPMGR_PLUGIN_FILE, array( 'BPMGR_Plugin', 'run_deactivation' ) );
 
 // Start the plugin after all plugins are loaded
 add_action(
 	'plugins_loaded',
 	static function () {
-		Block_Presets_Manager::get_instance();
+		BPMGR_Plugin::get_instance();
 	},
 	10
 );
