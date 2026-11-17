@@ -1,8 +1,8 @@
 <?php
 /**
- * Gutenberg Blocks for Block Presets Manager
+ * Gutenberg Blocks for OnceBlock
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  */
 
 // Prevent direct access
@@ -61,7 +61,7 @@ class BPMGR_Gutenberg_Blocks {
 
 		// Without this, the wp.i18n.__() calls in block-preset.js have no translation
 		// catalog to draw from and always render the English source strings.
-		wp_set_script_translations( $handle, 'block-presets-manager', BPMGR_PLUGIN_DIR . 'languages' );
+		wp_set_script_translations( $handle, 'onceblock', BPMGR_PLUGIN_DIR . 'languages' );
 
 		// Register block type (dynamic)
 		register_block_type(
@@ -122,13 +122,13 @@ class BPMGR_Gutenberg_Blocks {
 		$align      = isset( $attributes['align'] ) ? sanitize_html_class( $attributes['align'] ) : '';
 
 		if ( ! $preset_id ) {
-			return $this->render_notice( __( 'No Block Preset selected.', 'block-presets-manager' ) );
+			return $this->render_notice( __( 'No Block Preset selected.', 'onceblock' ) );
 		}
 
 		$post        = get_post( $preset_id );
 		$can_preview = is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_preview();
 		if ( ! $post || 'bpmgr_block_preset' !== $post->post_type || ( 'publish' !== $post->post_status && ! $can_preview ) ) {
-			return $this->render_notice( __( 'This block references a Block Preset that is missing or unavailable. Edits to a Block Preset affect all posts and pages using it.', 'block-presets-manager' ) );
+			return $this->render_notice( __( 'This block references a Block Preset that is missing or unavailable. Edits to a Block Preset affect all posts and pages using it.', 'onceblock' ) );
 		}
 
 		// Build wrapper classes
@@ -148,7 +148,7 @@ class BPMGR_Gutenberg_Blocks {
 		if ( $show_title ) {
 			$html .= '<div class="bpmgr-preset-title">' . esc_html( get_the_title( $post ) ) . '</div>';
 		}
-		$html .= '<div class="bpmgr-preset-content">' . $rendered_content . '</div>';
+		$html .= '<div class="bpmgr-preset-content">' . wp_kses_post( $rendered_content ) . '</div>';
 		$html .= '</div>';
 
 		return $html;

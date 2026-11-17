@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin Interface for Block Presets Manager
+ * Admin Interface for OnceBlock
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
@@ -68,7 +68,7 @@ class BPMGR_Admin {
 			$actions['bpmgr_duplicate'] = sprintf(
 				'<a href="#" class="bpmgr-duplicate-link" data-block-id="%1$d">%2$s</a>',
 				absint( $post->ID ),
-				esc_html__( 'Duplicate', 'block-presets-manager' )
+				esc_html__( 'Duplicate', 'onceblock' )
 			);
 		}
 		return $actions;
@@ -89,10 +89,10 @@ class BPMGR_Admin {
 		$preset   = $block_id ? get_post( $block_id ) : null;
 
 		if ( ! $preset || 'bpmgr_block_preset' !== $preset->post_type ) {
-			wp_send_json_error( __( 'Block preset not found.', 'block-presets-manager' ), 404 );
+			wp_send_json_error( __( 'Block preset not found.', 'onceblock' ), 404 );
 		}
 		if ( ! current_user_can( 'edit_post', $preset->ID ) ) {
-			wp_send_json_error( __( 'You are not allowed to do that.', 'block-presets-manager' ), 403 );
+			wp_send_json_error( __( 'You are not allowed to do that.', 'onceblock' ), 403 );
 		}
 
 		return $preset;
@@ -106,7 +106,7 @@ class BPMGR_Admin {
 		$post_type = get_post_type_object( 'bpmgr_block_preset' );
 
 		if ( ! $post_type || ! current_user_can( $post_type->cap->create_posts ) ) {
-			wp_send_json_error( __( 'You are not allowed to do that.', 'block-presets-manager' ), 403 );
+			wp_send_json_error( __( 'You are not allowed to do that.', 'onceblock' ), 403 );
 		}
 
 		$new_id = wp_insert_post(
@@ -114,7 +114,7 @@ class BPMGR_Admin {
 				array(
 					'post_type'    => 'bpmgr_block_preset',
 					/* translators: %s: Title of the original block preset. */
-					'post_title'   => sprintf( __( '%s (Copy)', 'block-presets-manager' ), $preset->post_title ),
+					'post_title'   => sprintf( __( '%s (Copy)', 'onceblock' ), $preset->post_title ),
 					'post_content' => $preset->post_content,
 					'post_excerpt' => $preset->post_excerpt,
 					'post_status'  => 'draft',
@@ -125,7 +125,7 @@ class BPMGR_Admin {
 		);
 
 		if ( is_wp_error( $new_id ) || ! $new_id ) {
-			wp_send_json_error( __( 'Duplication failed.', 'block-presets-manager' ), 500 );
+			wp_send_json_error( __( 'Duplication failed.', 'onceblock' ), 500 );
 		}
 
 		// Copy taxonomy terms.
@@ -167,8 +167,8 @@ class BPMGR_Admin {
 		// Settings submenu under Block Presets (main location)
 		add_submenu_page(
 			'edit.php?post_type=bpmgr_block_preset',
-			__( 'Block Presets Settings', 'block-presets-manager' ),
-			__( 'Settings', 'block-presets-manager' ),
+			__( 'Block Presets Settings', 'onceblock' ),
+			__( 'Settings', 'onceblock' ),
 			'manage_options',
 			'bpmgr-settings',
 			array( $this, 'settings_page' )
@@ -177,8 +177,8 @@ class BPMGR_Admin {
 		// Tools submenu under Block Presets
 		add_submenu_page(
 			'edit.php?post_type=bpmgr_block_preset',
-			__( 'Block Presets Tools', 'block-presets-manager' ),
-			__( 'Tools', 'block-presets-manager' ),
+			__( 'Block Presets Tools', 'onceblock' ),
+			__( 'Tools', 'onceblock' ),
 			'manage_options',
 			'bpmgr-tools',
 			array( $this, 'tools_page' )
@@ -187,8 +187,8 @@ class BPMGR_Admin {
 		// Usage Statistics submenu
 		add_submenu_page(
 			'edit.php?post_type=bpmgr_block_preset',
-			__( 'Usage Statistics', 'block-presets-manager' ),
-			__( 'Statistics', 'block-presets-manager' ),
+			__( 'Usage Statistics', 'onceblock' ),
+			__( 'Statistics', 'onceblock' ),
 			'manage_options',
 			'bpmgr-statistics',
 			array( $this, 'statistics_page' )
@@ -196,10 +196,10 @@ class BPMGR_Admin {
 
 		// Also add to Settings menu for discoverability
 		add_options_page(
-			__( 'Block Presets Manager Settings', 'block-presets-manager' ),
-			__( 'Blocks Presets', 'block-presets-manager' ),
+			__( 'OnceBlock Settings', 'onceblock' ),
+			__( 'Blocks Presets', 'onceblock' ),
 			'manage_options',
-			'block-presets-manager',
+			'onceblock',
 			array( $this, 'settings_page' )
 		);
 	}
@@ -252,76 +252,64 @@ class BPMGR_Admin {
 		// General Settings Section
 		add_settings_section(
 			'bpmgr_general_settings',
-			__( 'General Settings', 'block-presets-manager' ),
+			__( 'General Settings', 'onceblock' ),
 			array( $this, 'general_settings_callback' ),
-			'block-presets-manager'
+			'onceblock'
 		);
 
 		add_settings_field(
 			'enable_acf_blocks',
-			__( 'Enable ACF Blocks (Optional)', 'block-presets-manager' ),
+			__( 'Enable ACF Blocks (Optional)', 'onceblock' ),
 			array( $this, 'checkbox_field_callback' ),
-			'block-presets-manager',
+			'onceblock',
 			'bpmgr_general_settings',
 			array(
 				'field'       => 'enable_acf_blocks',
-				'description' => __( 'Enable automatic ACF blocks registration from theme folders. Requires Advanced Custom Fields Pro plugin.', 'block-presets-manager' ),
+				'description' => __( 'Enable automatic ACF blocks registration from theme folders. Requires Advanced Custom Fields Pro plugin.', 'onceblock' ),
 			)
 		);
 
 		add_settings_field(
 			'enable_block_presets',
-			__( 'Enable Block Presets', 'block-presets-manager' ),
+			__( 'Enable Block Presets', 'onceblock' ),
 			array( $this, 'checkbox_field_callback' ),
-			'block-presets-manager',
+			'onceblock',
 			'bpmgr_general_settings',
 			array(
 				'field'       => 'enable_block_presets',
-				'description' => __( 'Enable the Block Presets custom post type.', 'block-presets-manager' ),
-			)
-		);
-
-		add_settings_field(
-			'enable_legacy_post_type',
-			__( 'Enable Legacy Post Type', 'block-presets-manager' ),
-			array( $this, 'checkbox_field_callback' ),
-			'block-presets-manager',
-			'bpmgr_general_settings',
-			array(
-				'field'       => 'enable_legacy_post_type',
-				'description' => __( 'Keep the old "block" post type for backward compatibility. Disable this after migration.', 'block-presets-manager' ),
+				'description' => __( 'Enable the Block Presets custom post type.', 'onceblock' ),
 			)
 		);
 
 		add_settings_field(
 			'enable_debug_logging',
-			__( 'Enable Test Log Mode', 'block-presets-manager' ),
+			__( 'Enable Test Log Mode', 'onceblock' ),
 			array( $this, 'checkbox_field_callback' ),
-			'block-presets-manager',
+			'onceblock',
 			'bpmgr_general_settings',
 			array(
 				'field'       => 'enable_debug_logging',
-				'description' => __( 'Write diagnostic logs to debug.log for troubleshooting. Disable in production.', 'block-presets-manager' ),
+				'description' => __( 'Write diagnostic logs to debug.log for troubleshooting. Disable in production.', 'onceblock' ),
 			)
 		);
 
 		// Block Folders Section
 		add_settings_section(
 			'bpmgr_folder_settings',
-			__( 'Block Folders', 'block-presets-manager' ),
+			__( 'Block Folders', 'onceblock' ),
 			array( $this, 'folder_settings_callback' ),
-			'block-presets-manager'
+			'onceblock'
 		);
 
 		add_settings_field(
 			'block_folders',
-			__( 'ACF Block Folders', 'block-presets-manager' ),
+			__( 'ACF Block Folders', 'onceblock' ),
 			array( $this, 'textarea_field_callback' ),
-			'block-presets-manager',
+			'onceblock',
 			'bpmgr_folder_settings',
 			array(
 				'field'       => 'block_folders',
-				'description' => __( 'Enter theme folder paths (relative to theme root) where ACF blocks are located. One per line.', 'block-presets-manager' ),
+				'description' => __( 'Enter theme folder paths (relative to theme root) where ACF blocks are located. One per line.', 'onceblock' ),
 				'placeholder' => "general/acf-blocks\npublic/acf-blocks\nlogin-register/acf-blocks\nmembers/acf-blocks",
 			)
 		);
@@ -335,7 +323,7 @@ class BPMGR_Admin {
 	public function admin_scripts( $hook ) {
 		$screen          = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_bpmgr_screen = ( $screen && isset( $screen->post_type ) && 'bpmgr_block_preset' === $screen->post_type );
-		if ( false !== strpos( $hook, 'block-presets-manager' ) ||
+		if ( false !== strpos( $hook, 'onceblock' ) ||
 			false !== strpos( $hook, 'bpmgr-' ) ||
 			$is_bpmgr_screen ) {
 
@@ -349,13 +337,13 @@ class BPMGR_Admin {
 					'ajax_url' => esc_url( admin_url( 'admin-ajax.php' ) ),
 					'nonce'    => wp_create_nonce( 'bpmgr_admin_nonce' ),
 					'strings'  => array(
-						'confirm_delete'     => __( 'Are you sure you want to delete this item?', 'block-presets-manager' ),
-						'processing'         => __( 'Processing...', 'block-presets-manager' ),
-						'loading'            => __( 'Loading...', 'block-presets-manager' ),
-						'preview_failed'     => __( 'Preview failed to load.', 'block-presets-manager' ),
-						'confirm_duplicate'  => __( 'Duplicate this block preset?', 'block-presets-manager' ),
-						'invalid_path'       => __( 'Invalid path detected. Paths cannot contain "..".', 'block-presets-manager' ),
-						'duplication_failed' => __( 'Duplication failed.', 'block-presets-manager' ),
+						'confirm_delete'     => __( 'Are you sure you want to delete this item?', 'onceblock' ),
+						'processing'         => __( 'Processing...', 'onceblock' ),
+						'loading'            => __( 'Loading...', 'onceblock' ),
+						'preview_failed'     => __( 'Preview failed to load.', 'onceblock' ),
+						'confirm_duplicate'  => __( 'Duplicate this block preset?', 'onceblock' ),
+						'invalid_path'       => __( 'Invalid path detected. Paths cannot contain "..".', 'onceblock' ),
+						'duplication_failed' => __( 'Duplication failed.', 'onceblock' ),
 					),
 				)
 			);
@@ -368,7 +356,7 @@ class BPMGR_Admin {
 	public function add_meta_boxes() {
 		add_meta_box(
 			'bpmgr_block_info',
-			__( 'Block Information', 'block-presets-manager' ),
+			__( 'Block Information', 'onceblock' ),
 			array( $this, 'block_info_meta_box' ),
 			'bpmgr_block_preset',
 			'side',
@@ -377,7 +365,7 @@ class BPMGR_Admin {
 
 		add_meta_box(
 			'bpmgr_block_usage',
-			__( 'Usage Statistics', 'block-presets-manager' ),
+			__( 'Usage Statistics', 'onceblock' ),
 			array( $this, 'block_usage_meta_box' ),
 			'bpmgr_block_preset',
 			'side',
@@ -386,7 +374,7 @@ class BPMGR_Admin {
 
 		add_meta_box(
 			'bpmgr_block_shortcode',
-			__( 'Shortcode & Functions', 'block-presets-manager' ),
+			__( 'Shortcode & Functions', 'onceblock' ),
 			array( $this, 'block_shortcode_meta_box' ),
 			'bpmgr_block_preset',
 			'side',
@@ -407,17 +395,17 @@ class BPMGR_Admin {
 		?>
 		<table class="form-table">
 			<tr>
-				<th><label for="bpmgr_block_type"><?php esc_html_e( 'Block Type', 'block-presets-manager' ); ?></label></th>
+				<th><label for="bpmgr_block_type"><?php esc_html_e( 'Block Type', 'onceblock' ); ?></label></th>
 				<td>
 					<select name="bpmgr_block_type" id="bpmgr_block_type" class="widefat">
-						<option value="content" <?php selected( $block_type, 'content' ); ?>><?php esc_html_e( 'Content Block', 'block-presets-manager' ); ?></option>
-						<option value="template" <?php selected( $block_type, 'template' ); ?>><?php esc_html_e( 'Template Block', 'block-presets-manager' ); ?></option>
-						<option value="component" <?php selected( $block_type, 'component' ); ?>><?php esc_html_e( 'Component Block', 'block-presets-manager' ); ?></option>
+						<option value="content" <?php selected( $block_type, 'content' ); ?>><?php esc_html_e( 'Content Block', 'onceblock' ); ?></option>
+						<option value="template" <?php selected( $block_type, 'template' ); ?>><?php esc_html_e( 'Template Block', 'onceblock' ); ?></option>
+						<option value="component" <?php selected( $block_type, 'component' ); ?>><?php esc_html_e( 'Component Block', 'onceblock' ); ?></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="bpmgr_block_description"><?php esc_html_e( 'Description', 'block-presets-manager' ); ?></label></th>
+				<th><label for="bpmgr_block_description"><?php esc_html_e( 'Description', 'onceblock' ); ?></label></th>
 				<td>
 					<textarea name="bpmgr_block_description" id="bpmgr_block_description" class="widefat" rows="3"><?php echo esc_textarea( $block_description ); ?></textarea>
 				</td>
@@ -447,7 +435,7 @@ class BPMGR_Admin {
 		);
 
 		if ( $usage_stats ) {
-			echo '<h4>' . esc_html( __( 'Most Used On:', 'block-presets-manager' ) ) . '</h4>';
+			echo '<h4>' . esc_html( __( 'Most Used On:', 'onceblock' ) ) . '</h4>';
 			echo '<ul>';
 			foreach ( $usage_stats as $stat ) {
 				$used_post = get_post( $stat->post_id );
@@ -456,13 +444,13 @@ class BPMGR_Admin {
 					echo '<a href="' . esc_url( get_edit_post_link( $stat->post_id ) ) . '">' . esc_html( $used_post->post_title ) . '</a>';
 					echo ' (' . esc_html( $stat->usage_count ) . ' times)';
 					/* translators: %s: Formatted date when the block preset was last used */
-					echo '<br><small>' . esc_html( sprintf( __( 'Last used: %s', 'block-presets-manager' ), date_i18n( get_option( 'date_format' ), strtotime( $stat->last_used ) ) ) ) . '</small>';
+					echo '<br><small>' . esc_html( sprintf( __( 'Last used: %s', 'onceblock' ), date_i18n( get_option( 'date_format' ), strtotime( $stat->last_used ) ) ) ) . '</small>';
 					echo '</li>';
 				}
 			}
 			echo '</ul>';
 		} else {
-			echo '<p>' . esc_html( __( 'This block preset has not been used yet.', 'block-presets-manager' ) ) . '</p>';
+			echo '<p>' . esc_html( __( 'This block preset has not been used yet.', 'onceblock' ) ) . '</p>';
 		}
 	}
 
@@ -473,16 +461,13 @@ class BPMGR_Admin {
 	 */
 	public function block_shortcode_meta_box( $post ) {
 		?>
-		<h4><?php esc_html_e( 'Shortcode', 'block-presets-manager' ); ?></h4>
+		<h4><?php esc_html_e( 'Shortcode', 'onceblock' ); ?></h4>
 		<input type="text" readonly value="[bpmgr_block id=&quot;<?php echo esc_attr( $post->ID ); ?>&quot;]" class="widefat" onclick="this.select();">
 		
-		<h4><?php esc_html_e( 'PHP Function', 'block-presets-manager' ); ?></h4>
+		<h4><?php esc_html_e( 'PHP Function', 'onceblock' ); ?></h4>
 		<input type="text" readonly value="bpmgr_render_block_preset(<?php echo esc_html( $post->ID ); ?>);" class="widefat" onclick="this.select();">
 		
-		<h4><?php esc_html_e( 'Legacy Function', 'block-presets-manager' ); ?></h4>
-		<input type="text" readonly value="do_cpt_block(<?php echo esc_html( $post->ID ); ?>);" class="widefat" onclick="this.select();">
-		
-		<p><small><?php esc_html_e( 'Click on the code to select it for copying.', 'block-presets-manager' ); ?></small></p>
+		<p><small><?php esc_html_e( 'Click on the code to select it for copying.', 'onceblock' ); ?></small></p>
 		<?php
 	}
 
@@ -527,8 +512,8 @@ class BPMGR_Admin {
 		foreach ( $columns as $key => $title ) {
 			$new_columns[ $key ] = $title;
 			if ( 'title' === $key ) {
-				$new_columns['bpmgr_usage']     = __( 'Usage Count', 'block-presets-manager' );
-				$new_columns['bpmgr_shortcode'] = __( 'Shortcode', 'block-presets-manager' );
+				$new_columns['bpmgr_usage']     = __( 'Usage Count', 'onceblock' );
+				$new_columns['bpmgr_shortcode'] = __( 'Shortcode', 'onceblock' );
 			}
 		}
 		return $new_columns;
@@ -589,14 +574,14 @@ class BPMGR_Admin {
 	 * General settings section callback
 	 */
 	public function general_settings_callback() {
-		echo '<p>' . esc_html( __( 'Configure general settings for the Block Presets Manager plugin. The plugin works with native WordPress functionality - ACF integration is optional.', 'block-presets-manager' ) ) . '</p>';
+		echo '<p>' . esc_html( __( 'Configure general settings for the OnceBlock plugin. The plugin works with native WordPress functionality - ACF integration is optional.', 'onceblock' ) ) . '</p>';
 	}
 
 	/**
 	 * Folder settings section callback
 	 */
 	public function folder_settings_callback() {
-		echo '<p>' . esc_html( __( 'Configure which theme folders should be scanned for ACF blocks.', 'block-presets-manager' ) ) . '</p>';
+		echo '<p>' . esc_html( __( 'Configure which theme folders should be scanned for ACF blocks.', 'onceblock' ) ) . '</p>';
 	}
 
 	/**
@@ -648,10 +633,9 @@ class BPMGR_Admin {
 		// Checkboxes are absent from $_POST entirely when unchecked, so these must be written
 		// unconditionally - an isset() guard would drop the key (and the "off" state) rather
 		// than storing false, making the setting impossible to turn off once enabled.
-		$sanitized['enable_acf_blocks']       = ! empty( $input['enable_acf_blocks'] );
-		$sanitized['enable_block_presets']    = ! empty( $input['enable_block_presets'] );
-		$sanitized['enable_legacy_post_type'] = ! empty( $input['enable_legacy_post_type'] );
-		$sanitized['enable_debug_logging']    = ! empty( $input['enable_debug_logging'] );
+		$sanitized['enable_acf_blocks']    = ! empty( $input['enable_acf_blocks'] );
+		$sanitized['enable_block_presets'] = ! empty( $input['enable_block_presets'] );
+		$sanitized['enable_debug_logging'] = ! empty( $input['enable_debug_logging'] );
 
 		if ( isset( $input['block_folders'] ) ) {
 			$folders = explode( "\n", $input['block_folders'] );

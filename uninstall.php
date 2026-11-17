@@ -1,11 +1,11 @@
 <?php
 /**
- * Uninstall script for Block Presets Manager
+ * Uninstall script for OnceBlock
  *
  * This file is executed when the plugin is deleted via WordPress admin.
  * It cleans up all plugin data including posts, meta, options, and database tables.
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
@@ -94,5 +94,5 @@ bpmgr_uninstall_cleanup();
  */
 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-	error_log( 'Block Presets Manager plugin has been uninstalled and all data removed.' );
+	error_log( 'OnceBlock plugin has been uninstalled and all data removed.' );
 }

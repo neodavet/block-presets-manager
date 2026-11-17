@@ -2,7 +2,7 @@
 /**
  * Handle ACF Blocks Registration and Management
  *
- * @package Block_Presets_Manager
+ * @package OnceBlock
  * @since 1.0.0
  */
 
@@ -116,7 +116,7 @@ class BPMGR_ACF_Blocks {
 					array(
 						array(
 							'slug'  => 'bpmgr-custom-blocks',
-							'title' => __( 'Custom ACF Blocks', 'block-presets-manager' ),
+							'title' => __( 'Custom ACF Blocks', 'onceblock' ),
 							'icon'  => 'block-default',
 						),
 					)
@@ -287,7 +287,7 @@ class BPMGR_ACF_Blocks {
 			echo esc_html(
 				sprintf(
 					/* translators: %s: Block slug. */
-					__( 'Block template not found: %s', 'block-presets-manager' ),
+					__( 'Block template not found: %s', 'onceblock' ),
 					$block_slug
 				)
 			);
@@ -398,9 +398,9 @@ class BPMGR_ACF_Blocks {
 		?>
 		<div class="notice notice-warning is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'Block Presets Manager:', 'block-presets-manager' ); ?></strong>
-				<?php esc_html_e( 'Advanced Custom Fields Pro is required for automatic ACF blocks registration. You can still use Block Presets without ACF.', 'block-presets-manager' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'block-presets-manager' ); ?></a>
+				<strong><?php esc_html_e( 'OnceBlock:', 'onceblock' ); ?></strong>
+				<?php esc_html_e( 'Advanced Custom Fields Pro is required for automatic ACF blocks registration. You can still use Block Presets without ACF.', 'onceblock' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Configure settings', 'onceblock' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -418,9 +418,9 @@ class BPMGR_ACF_Blocks {
 		?>
 		<div class="notice notice-info is-dismissible">
 			<p>
-				<strong><?php esc_html_e( 'ACF Features Disabled:', 'block-presets-manager' ); ?></strong>
-				<?php esc_html_e( 'Automatic ACF blocks registration is currently disabled. The plugin works with native WordPress functionality.', 'block-presets-manager' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Enable ACF features', 'block-presets-manager' ); ?></a>
+				<strong><?php esc_html_e( 'ACF Features Disabled:', 'onceblock' ); ?></strong>
+				<?php esc_html_e( 'Automatic ACF blocks registration is currently disabled. The plugin works with native WordPress functionality.', 'onceblock' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=bpmgr_block_preset&page=bpmgr-settings' ) ); ?>"><?php esc_html_e( 'Enable ACF features', 'onceblock' ); ?></a>
 			</p>
 		</div>
 		<?php
