@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: OnceBlock – Build Once, Insert Anywhere
- * Plugin URI: https://github.com/neodavet/block-presets-manager
+ * Plugin URI: https://github.com/neodavet/onceblock
  * Description: A powerful plugin for creating and managing reusable Gutenberg block presets. Allows you to create custom block templates and ACF blocks that can be reused across your website.
- * Version: 1.0.6
+ * Version: 1.0.7
  * Author: David Tavares Cuevas
  * Author URI: https://neodavet.github.io/davetportfolio/
  * Text Domain: onceblock
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'BPMGR_VERSION', '1.0.6' );
+define( 'BPMGR_VERSION', '1.0.7' );
 define( 'BPMGR_PLUGIN_FILE', __FILE__ );
 define( 'BPMGR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BPMGR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
