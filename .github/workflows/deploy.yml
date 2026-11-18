@@ -1,0 +1,36 @@
+name: Deploy to WordPress.org
+
+# Pushing a version tag (for example v1.0.7) publishes that tag to the
+# WordPress.org SVN repository: trunk plus tags/<version>.
+# Files excluded from the release are listed in .distignore.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    name: Deploy tag to WordPress.org
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Verify tag matches plugin version
+        run: |
+          header=$(grep -m1 -E '^\s*\*\s*Version:' onceblock.php | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
+          stable=$(grep -m1 -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
+          echo "tag=$VERSION header=$header stable=$stable"
+          [ "$VERSION" = "$header" ] && [ "$VERSION" = "$stable" ]
+
+      - name: WordPress plugin deploy
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: onceblock
