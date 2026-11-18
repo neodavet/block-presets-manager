@@ -1,36 +1,73 @@
+# Deploys the plugin to the WordPress.org SVN repository (trunk + tags/X.Y.Z).
+#
+# Triggers:
+#   - pushing a tag vX.Y.Z
+#   - manually from the Actions tab ("Run workflow", pick a tag as the ref)
+#
+# Required repository secrets: SVN_USERNAME, SVN_PASSWORD
+# (SVN password from https://profiles.wordpress.org/me/profile/edit/group/3/?screen=svn-password)
 name: Deploy to WordPress.org
 
-# Pushing a version tag (for example v1.0.7) publishes that tag to the
-# WordPress.org SVN repository: trunk plus tags/<version>.
-# Files excluded from the release are listed in .distignore.
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
+  workflow_dispatch:
+
+concurrency:
+  group: wporg-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
-    name: Deploy tag to WordPress.org
+    name: Deploy to WordPress.org
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Derive version from tag
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
-
-      - name: Verify tag matches plugin version
+      - name: Require a tag ref
+        if: github.ref_type != 'tag'
         run: |
-          header=$(grep -m1 -E '^\s*\*\s*Version:' onceblock.php | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
-          stable=$(grep -m1 -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
-          echo "tag=$VERSION header=$header stable=$stable"
-          [ "$VERSION" = "$header" ] && [ "$VERSION" = "$stable" ]
+          echo "::error::Run this workflow on a tag (vX.Y.Z), not on a branch."
+          exit 1
 
-      - name: WordPress plugin deploy
-        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Verify version consistency
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          HEADER=$(grep -m1 -E '^[ *]*Version:' onceblock.php | sed -E 's/.*Version:[[:space:]]*//' | tr -d '\r ')
+          CONST=$(grep -m1 "define( 'BPMGR_VERSION'" onceblock.php | sed -E "s/.*'BPMGR_VERSION', '([^']+)'.*/\1/")
+          STABLE=$(grep -m1 -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:[[:space:]]*//' | tr -d '\r ')
+          echo "tag=$TAG header=$HEADER const=$CONST stable=$STABLE"
+          if [ "$TAG" != "$HEADER" ] || [ "$TAG" != "$CONST" ] || [ "$TAG" != "$STABLE" ]; then
+            echo "::error::Version mismatch. Tag=$TAG, header=$HEADER, BPMGR_VERSION=$CONST, Stable tag=$STABLE"
+            exit 1
+          fi
+          echo "version=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: WordPress.org plugin deploy
+        id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: true
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: onceblock
+          VERSION: ${{ steps.version.outputs.version }}
+          ASSETS_DIR: .wordpress-org
+
+      - name: Attach zip to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" "${{ steps.deploy.outputs.zip-path }}" --clobber

@@ -1,0 +1,39 @@
+# Updates only the readme.txt and .wordpress-org/ assets (banners, icons, screenshots)
+# on WordPress.org, without releasing a new version. Runs on pushes to main.
+name: Update WordPress.org assets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'readme.txt'
+      - '.wordpress-org/**'
+  workflow_dispatch:
+
+concurrency:
+  group: wporg-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  assets:
+    name: Push readme/assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: WordPress.org plugin asset/readme update
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: onceblock
+          ASSETS_DIR: .wordpress-org
+          IGNORE_OTHER_FILES: true

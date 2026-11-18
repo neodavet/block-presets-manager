@@ -2,6 +2,7 @@
 # Directories end with "/", a leading "/" anchors to the plugin root.
 /.git/
 /.github/
+/.wordpress-org/
 /.cursor/
 /.claude/
 /.idea/

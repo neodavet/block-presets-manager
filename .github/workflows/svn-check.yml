@@ -1,0 +1,27 @@
+# Read-only check that the SVN_USERNAME / SVN_PASSWORD secrets can reach and
+# authenticate against the WordPress.org SVN repo. Publishes nothing.
+# Run it manually from the Actions tab.
+name: Test WordPress.org SVN connection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check SVN access
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: List the SVN repository
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          svn ls --non-interactive --username "$SVN_USERNAME" --password "$SVN_PASSWORD" \
+            https://plugins.svn.wordpress.org/onceblock/
+          echo "Repository reachable and credentials accepted."
