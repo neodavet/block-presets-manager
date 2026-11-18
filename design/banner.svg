@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250" width="772" height="250">
+<defs><pattern id="g" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#e3e9fb" stroke-width="1"/></pattern></defs>
+<rect width="772" height="250" fill="#fff"/><rect width="772" height="250" fill="url(#g)"/>
+<svg x="52" y="45" width="160" height="160" viewBox="0 0 256 256"><rect width="256" height="256" rx="50" fill="#1f5bff"/><rect x="116" y="48" width="104" height="104" rx="16" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="8"/><rect x="86" y="78" width="104" height="104" rx="16" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="8"/><rect x="56" y="108" width="104" height="104" rx="16" fill="#fff"/><rect x="76" y="132" width="64" height="11" rx="5" fill="#1f5bff"/><rect x="76" y="154" width="42" height="11" rx="5" fill="#9db8ff"/></svg>
+<text x="244" y="118" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="62" fill="#0b1b3f">OnceBlock</text>
+<text x="246" y="158" font-family="Inter, sans-serif" font-size="22" fill="#1f5bff">Build once. Insert anywhere.</text>
+<g fill="none" stroke="#1f5bff" stroke-width="3"><rect x="600" y="48" width="64" height="64" rx="10" stroke-opacity=".2"/><rect x="640" y="94" width="64" height="64" rx="10" stroke-opacity=".4"/><rect x="680" y="140" width="64" height="64" rx="10" stroke-opacity=".7"/></g>
+</svg>
