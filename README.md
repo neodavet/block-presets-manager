@@ -3,7 +3,7 @@
 A free, open-source WordPress plugin to create and manage reusable Gutenberg block presets. Build content once and reuse it anywhere via a native block, PHP helpers, shortcodes, or REST API.
 
 - Author: David Tavares Cuevas
-- Plugin URI: https://github.com/neodavet/block-presets-manager
+- Plugin URI: https://github.com/neodavet/onceblock
 - License: GPL v2 or later
 - Requires: WordPress 5.9+, PHP 7.4+
 - Tested up to: WordPress 7.1

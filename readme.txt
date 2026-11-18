@@ -4,7 +4,7 @@ Tags: gutenberg, blocks, presets, reusable, native
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 Text Domain: onceblock
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -82,6 +82,10 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 
 == Changelog ==
 
+= 1.0.7 =
+* Changed: the Plugin URI now points to the renamed GitHub repository (neodavet/onceblock)
+* Added: automatic deployment from GitHub to WordPress.org
+
 = 1.0.6 =
 * Changed: the plugin is now named OnceBlock – Build Once, Insert Anywhere (slug `onceblock`)
 * Removed: the unprefixed legacy `block` post type, the `[block_preset]` shortcode, `do_cpt_block()`, the "Enable Legacy Post Type" setting and the migration tool
@@ -138,6 +142,9 @@ Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to sp
 * Comprehensive uninstall cleanup
 
 == Upgrade Notice ==
+
+= 1.0.7 =
+Updates the Plugin URI to the renamed GitHub repository. No functional changes.
 
 = 1.0.6 =
 The plugin is renamed to OnceBlock. The legacy `block` post type, `[block_preset]` shortcode and `do_cpt_block()` function are removed; use `bpmgr_block_preset`, `[bpmgr_block]` and `bpmgr_render_block_preset()`.
