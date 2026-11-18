@@ -80,6 +80,13 @@ Yes, block presets work within the Gutenberg editor and are compatible with most
 
 Go to Settings > Blocks Presets and modify the "ACF Block Folders" setting to specify which theme folders should be scanned for ACF blocks.
 
+== Screenshots ==
+
+1. Manage your block presets: categories, tags, shortcodes and usage count in one list.
+2. Insert a preset in the block editor: search and filter your library, then pick a preset from the sidebar.
+3. Usage statistics show your most used and unused presets.
+4. Simple settings, with optional ACF block registration from theme folders.
+
 == Changelog ==
 
 = 1.0.7 =
